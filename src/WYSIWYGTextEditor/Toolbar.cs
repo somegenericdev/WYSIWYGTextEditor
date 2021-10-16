@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Blazored.TextEditor
+namespace WYSIWYGTextEditor
 {
     public class Toolbar
     {

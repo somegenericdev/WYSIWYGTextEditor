@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Blazored.TextEditor.Internal
+namespace WYSIWYGTextEditor.Internal
 {
     public partial class ToolbarContentComp
     {

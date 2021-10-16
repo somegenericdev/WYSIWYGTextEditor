@@ -1,7 +1,7 @@
 ﻿@page "/"
-@using Blazored.TextEditor
+@using WYSIWYGTextEditor
 
-<BlazoredTextEditor @ref="@QuillHtml">
+<TextEditor @ref="@QuillHtml">
     <ToolbarContent>
         <select class="ql-header">
             <option selected=""></option>
@@ -35,7 +35,7 @@
             BlazorHelpWebsite.com
         </a>
     </EditorContent>
-</BlazoredTextEditor>
+</TextEditor>
 <br />
 <button class="btn btn-primary"
         @onclick="GetHTML">
@@ -52,7 +52,7 @@
     @QuillHTMLContent
 </div>
 <br />
-<BlazoredTextEditor @ref="@QuillNative"
+<TextEditor @ref="@QuillNative"
                     Placeholder="Enter non HTML format like centering...">
     <ToolbarContent>
         <span class="ql-formats">
@@ -94,7 +94,7 @@
             <button class="ql-link"></button>
         </span>
     </ToolbarContent>
-</BlazoredTextEditor>
+</TextEditor>
 <br />
 <button class="btn btn-primary"
         @onclick="GetContent">
@@ -115,7 +115,9 @@
 </div>
 <br />
 <br />
-<BlazoredTextEditor @ref="@QuillReadOnly"
+
+
+<TextEditor @ref="@QuillReadOnly"
                     ReadOnly="true"
                     Theme="bubble"
                     DebugLevel="log">
@@ -149,7 +151,7 @@
     <EditorContent>
         @((MarkupString)@QuillReadOnlyContent)
     </EditorContent>
-</BlazoredTextEditor>
+</TextEditor>
 <br />
 <button class="btn btn-info"
         @onclick="ToggleQuillEditor">
@@ -157,9 +159,9 @@
 </button>
 
 @code {
-    BlazoredTextEditor QuillHtml;
-    BlazoredTextEditor QuillNative;
-    BlazoredTextEditor QuillReadOnly;
+    TextEditor QuillHtml;
+    TextEditor QuillNative;
+    TextEditor QuillReadOnly;
 
     string QuillHTMLContent;
     string QuillContent;

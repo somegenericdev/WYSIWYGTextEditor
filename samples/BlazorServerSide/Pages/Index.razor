@@ -1,207 +1,41 @@
 ﻿@page "/"
-@using Blazored.TextEditor
-
+@using WYSIWYGTextEditor
 
 <style>
     /*SET THE DEFAULT FONT*/
     #TestId {
-        font-family: "Impact";
+        font-family: "MS Gothic";
         font-size: 18px;
         height: 375px;
     }
 
-    #container #toolbar-container.ql-toolbar {
-        padding: 10px;
+    /*DEFINE ALL OF THE CUSTOM FONTS*/
+    .ql-font-MSGothic {
+        font-family: 'MS Gothic';
     }
 
-    .ql-snow .ql-picker.ql-font, .ql-bubble .ql-picker.ql-font {
-        width: 130px;
+    .ql-font-Bahnschrift {
+        font-family: 'Bahnschrift'
     }
 
-
-
-    /*DEFINE THE CUSTOM FONTS*/
-
-    .ql-font-impact {
+    .ql-font-Impact {
         font-family: 'Impact';
     }
 
-    .ql-font-courier {
+    .ql-font-Courier {
         font-family: 'Courier';
     }
 
-    .ql-font-comic {
+    .ql-font-Comic {
         font-family: 'Comic Sans MS';
     }
 </style>
 
-<BlazoredTextEditor @ref="@QuillHtml">
-    <ToolbarContent>
-        <select class="ql-header">
-            <option selected=""></option>
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value="4"></option>
-            <option value="5"></option>
-        </select>
-        <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-        </span>
-        <span class="ql-formats">
-            <select class="ql-color"></select>
-            <select class="ql-background"></select>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-link"></button>
-        </span>
-    </ToolbarContent>
-    <EditorContent>
-        <h4>This Toolbar works with HTML</h4>
-        <a href="http://BlazorHelpWebsite.com">
-            BlazorHelpWebsite.com
-        </a>
-    </EditorContent>
-</BlazoredTextEditor>
-<br />
-<button class="btn btn-primary"
-        @onclick="GetHTML">
-    Get HTML
-</button>
-<button class="btn btn-primary"
-        @onclick="SetHTML">
-    Set HTML
-</button>
-<br />
-<div>
-    <br />
-    @((MarkupString)QuillHTMLContent)
-    @QuillHTMLContent
-</div>
-<br />
+<TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor" Fonts="Fonts"
+            Placeholder="Enter non HTML format like centering...">
+</TextEditor>
 
-<BlazoredTextEditor CustomFonts="Fonts" EditorContainerId="TestId" @ref="@QuillNative"
-                    Placeholder="Enter non HTML format like centering...">
-    <ToolbarContent>
-        <ToolbarContentComp Fonts="Fonts" ShowAlignmentControls="true" ShowColorControls="false" ShowHypertextLinkControls="false" ShowIndentationControls="false" ShowListControls="true" ShowSizeControls="true" ShowStyleControls="false"></ToolbarContentComp>
-    </ToolbarContent>
-</BlazoredTextEditor>
-<br />
-<button class="btn btn-primary"
-        @onclick="GetContent">
-    Get Content
-</button>
-<button class="btn btn-primary"
-        @onclick="LoadContent">
-    Load Content
-</button>
-<button class="btn btn-primary"
-        @onclick="InsertImage">
-    Insert Image
-</button>
-<br />
-<br />
-<div>
-    @QuillContent
-</div>
-<br />
-<br />
-<BlazoredTextEditor @ref="@QuillReadOnly"
-                    ReadOnly="true"
-                    Theme="bubble"
-                    DebugLevel="log">
-    <ToolbarContent>
-        <select class="ql-header">
-            <option selected=""></option>
-            <option value="1"></option>
-            <option value="2"></option>
-            <option value="3"></option>
-            <option value="4"></option>
-            <option value="5"></option>
-        </select>
-        <span class="ql-formats">
-            <button class="ql-bold"></button>
-            <button class="ql-italic"></button>
-            <button class="ql-underline"></button>
-            <button class="ql-strike"></button>
-        </span>
-        <span class="ql-formats">
-            <select class="ql-color"></select>
-            <select class="ql-background"></select>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-list" value="ordered"></button>
-            <button class="ql-list" value="bullet"></button>
-        </span>
-        <span class="ql-formats">
-            <button class="ql-link"></button>
-        </span>
-    </ToolbarContent>
-    <EditorContent>
-        @((MarkupString)@QuillReadOnlyContent)
-    </EditorContent>
-</BlazoredTextEditor>
-<br />
-<button class="btn btn-info"
-        @onclick="ToggleQuillEditor">
-    Toggle Editor
-</button>
-
-@code { 
-    List<string> Fonts = new List<string> { "impact", "courier", "comic" };
-    BlazoredTextEditor QuillHtml;
-    BlazoredTextEditor QuillNative;
-    BlazoredTextEditor QuillReadOnly;
-
-    string QuillHTMLContent;
-    string QuillContent;
-    string QuillReadOnlyContent =
-        @"<span><b>Read Only</b> <u>Content</u></span>";
-
-    bool mode = false;
-
-    public async void GetHTML()
-    {
-        QuillHTMLContent = await this.QuillHtml.GetHTML();
-        StateHasChanged();
-    }
-
-    public async void SetHTML()
-    {
-        string QuillContent =
-            @"<a href='http://BlazorHelpWebsite.com/'>" +
-            "<img src='images/BlazorHelpWebsite.gif' /></a>";
-
-        await this.QuillHtml.LoadHTMLContent(QuillContent);
-        StateHasChanged();
-    }
-
-    public async void GetContent()
-    {
-        QuillContent = await this.QuillNative.GetContent();
-        StateHasChanged();
-    }
-    public async void LoadContent()
-    {
-        await this.QuillNative.LoadContent(QuillContent);
-        StateHasChanged();
-    }
-
-    public async void InsertImage()
-    {
-        await this.QuillNative.InsertImage("images/BlazorHelpWebsite.gif");
-        StateHasChanged();
-    }
-
-    async Task ToggleQuillEditor()
-    {
-        mode = (mode) ? false : true;
-        await this.QuillReadOnly.EnableEditor(mode);
-    } }
+@code{
+    List<string> Fonts = new List<string> { "MSGothic", "Impact", "Courier", "Comic", "Bahnschrift" }; //be sure to set the default font as the first in the list
+    TextEditor MyEditor;
+}

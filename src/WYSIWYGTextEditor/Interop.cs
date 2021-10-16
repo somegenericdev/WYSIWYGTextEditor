@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Blazored.TextEditor
+namespace WYSIWYGTextEditor
 {
     public static class Interop
     {
