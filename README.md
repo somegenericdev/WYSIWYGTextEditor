@@ -1,16 +1,8 @@
 # Blazored TextEditor
-Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com")
+WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor] (https://github.com/Blazored/TextEditor)
 
 ![Screenshot](HTMLExample.png)
 
-### Sample Applications
-
-* [Simple blogging application written in Microsoft Server Side Blazor](https://github.com/ADefWebserver/Blazor-Blogs "Blazor Blogs") - [Contains an example of uploading images]
-
-### Helpful Articles
-
-* [Creating Reusable Custom Blazor Controls](https://blazorhelpwebsite.com/ViewBlogPost/11 "BlazorHelpWebsite.com")
-* [Creating A Rich Text Editor In Blazor Using Quill](https://blazorhelpwebsite.com/ViewBlogPost/12 "BlazorHelpWebsite.com")
 
 ### Installing
 
@@ -34,8 +26,8 @@ Then add the JS script at the bottom of the page using the following script tag.
 
 ```html
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="_content/Blazored.TextEditor/quill-blot-formatter.min.js"></script>
-    <script src="_content/Blazored.TextEditor/Blazored-BlazorQuill.js"></script>
+    <script src="_content/WYSIWYGTextEditor/quill-blot-formatter.min.js"></script>
+    <script src="_content/WYSIWYGTextEditor/BlazorQuill.js"></script>
 ```
 
 **NOTE** If you're using Blazor WebAssembly then these need to be added to your `wwwroot\index.html`.
@@ -43,7 +35,7 @@ Then add the JS script at the bottom of the page using the following script tag.
 You can add the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
 ```cs
-@using Blazored.TextEditor
+@using WYSIWYGTextEditor
 ```
 
 ## Usage
@@ -73,11 +65,25 @@ Below is a list of all the options available on the Text Editor.
 
 
 ### Basic Example
-(see code in the [Index.razor page](https://github.com/Blazored/TextEditor/blob/master/samples/BlazorServerSide/Pages/Index.razor) in the repo for more examples)
-```cs
-@using Blazored.TextEditor
+Compared to the original project, this fork implements a much simpler way to use the component.
 
-<BlazoredTextEditor @ref="@QuillHtml">
+```cs
+@using WYSIWYGTextEditor
+<TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor"
+                    Placeholder="Enter non HTML format like centering...">
+</TextEditor>
+@code { 
+	TextEditor MyEditor;
+}
+
+```
+
+However, should you wish to for some reason, you can still use the component in the old, more verbose way.
+
+```cs
+@using WYSIWYGTextEditor
+
+<TextEditor @ref="@QuillHtml">
     <ToolbarContent>
         <select class="ql-header">
             <option selected=""></option>
@@ -110,7 +116,7 @@ Below is a list of all the options available on the Text Editor.
         <a href="http://BlazorHelpWebsite.com">
         BlazorHelpWebsite.com</a>
     </EditorContent>
-</BlazoredTextEditor>
+</TextEditor>
 <br />
 <button class="btn btn-primary" 
         @onclick="GetHTML">Get HTML</button>
@@ -126,7 +132,7 @@ Below is a list of all the options available on the Text Editor.
 
 @code {
 
-BlazoredTextEditor QuillHtml;
+TextEditor QuillHtml;
 string QuillHTMLContent;
 
     public async void GetHTML()
@@ -146,6 +152,58 @@ string QuillHTMLContent;
     }
 }
 ```
+
+###Add fonts
+This fork also implements a simple way to add your own fonts to the editor.
+
+```cs
+@using WYSIWYGTextEditor
+
+<style>
+    /*SET THE DEFAULT FONT*/
+    #TestId {
+        font-family: "MS Gothic";
+        font-size: 18px;
+        height: 375px;
+    }
+
+    /*DEFINE ALL OF THE CUSTOM FONTS*/
+    .ql-font-MSGothic {
+        font-family: 'MS Gothic';
+    }
+
+    .ql-font-Bahnschrift {
+        font-family: 'Bahnschrift'
+    }
+
+    .ql-font-Impact {
+        font-family: 'Impact';
+    }
+
+    .ql-font-Courier {
+        font-family: 'Courier';
+    }
+
+    .ql-font-Comic {
+        font-family: 'Comic Sans MS';
+    }
+</style>
+
+<TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor" Fonts="Fonts"
+            Placeholder="Enter non HTML format like centering...">
+</TextEditor>
+
+@code{
+    List<string> Fonts = new List<string> { "MSGothic", "Impact", "Courier", "Comic", "Bahnschrift" }; //be sure to set the default font as the first in the list
+    TextEditor MyEditor;
+}
+
+```
+
+### Import/Export in docx
+Coming soon
+
+
 ### Rich Text Screenshot
 ![Screenshot](DeltaExample.png)
 ### Read Only Screenshot

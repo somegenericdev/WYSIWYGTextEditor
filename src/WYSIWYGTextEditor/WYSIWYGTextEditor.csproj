@@ -13,7 +13,7 @@
     <Copyright>Copyright 2021 (c) somegenericdev. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/somegenericdev/TextEditor</PackageProjectUrl>
-	<PackageIcon>wwwroot\QuillLogo.png</PackageIcon>
+	<PackageIconUrl>https://raw.githubusercontent.com/somegenericdev/TextEditor/main/src/WYSIWYGTextEditor/wwwroot/QuillLogo.png</PackageIconUrl>
     <RepositoryUrl>https://github.com/somegenericdev/TextEditor</RepositoryUrl>
     <PackageTags>Blazor Rich Text Editor Quill QuillJS WYSIWYG Blazored Razor Components</PackageTags>
     <Company />
