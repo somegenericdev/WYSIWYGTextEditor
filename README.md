@@ -8,7 +8,7 @@ WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quill
 
 You can install from NuGet using the following command:
 
-`Install-Package Blazored.TextEditor`
+`Install-Package WYSIWYGTextEditor`
 
 Or via the Visual Studio package manger.
 
