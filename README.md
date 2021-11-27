@@ -1,5 +1,5 @@
 # Blazored TextEditor
-WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor] (https://github.com/Blazored/TextEditor)
+WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor](https://github.com/Blazored/TextEditor)
 
 ![Screenshot](HTMLExample.png)
 
