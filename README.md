@@ -153,7 +153,7 @@ string QuillHTMLContent;
 }
 ```
 
-###Add fonts
+### Add fonts
 This fork also implements a simple way to add your own fonts to the editor.
 
 ```cs
