@@ -1,7 +1,7 @@
 # Blazored TextEditor
 WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor](https://github.com/Blazored/TextEditor)
 
-![Screenshot](HTMLExample.png)
+![Screenshot](Screenshot.png)
 
 
 ### Installing
@@ -13,16 +13,13 @@ You can install from NuGet using the following command:
 Or via the Visual Studio package manger.
 
 ### Setup
-Blazor Server applications will need to include the following CSS and JS files in their `Pages\_Host.cshtml`.
-
-In the `head` tag add the following CSS.
+Add the following CSS files to `_Host.cshtml` if you're using Blazor Server or to `index.html` if you're using Blazor WebAssembly
 
 ```html
     <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
     <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
 ```
-
-Then add the JS script at the bottom of the page using the following script tag.
+And then do the same with the Javascript files
 
 ```html
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
@@ -30,39 +27,13 @@ Then add the JS script at the bottom of the page using the following script tag.
     <script src="_content/WYSIWYGTextEditor/BlazorQuill.js"></script>
 ```
 
-**NOTE** If you're using Blazor WebAssembly then these need to be added to your `wwwroot\index.html`.
-
-You can add the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
+Add the following using statement to `_Imports.razor`.
 
 ```cs
 @using WYSIWYGTextEditor
 ```
 
 ## Usage
-
-Below is a list of all the options available on the Text Editor.
-
-**Templates**
-
-- `ToolbarContent` (optional) - Allows the user to define the Toolbar (above the editor control, or in-line when using the bubble theme, and a user highlights text in the editor).
-- `EditorContent` (optional) - Allows the user to define the initial content
-
-**Parameters**
-
-- `ReadOnly` (Optional - Default: `false`) - Determines if the editor will load in read-only mode. This mode can be toggled.
-- `Placeholder` (Optional - Default: `Compose an epic...`) - The text to show when editor is empty.
-- `Theme` (Optional - Default: `snow`) - Use `snow` to show the Toolbar on top of the editor, and `bubble` for inline editing.
-- `DebugLevel` (Optional - Default: `info`) - Determines the level of debug information returned to the web browser console window. Options are `error`, `warn`, `log`, or `info`.
-
-**Methods**
-
-- `GetText` - Gets the content of the editor as Text.
-- `GetHTML` - Gets the content of the editor as HTML.
-- `GetContent` - Gets the content of the editor in the native Quill JSON Delta format.
-- `LoadContent` (`json`) - Allows the content of the editor to be programmatically set.
-- `LoadHTMLContent` (`string`) - Allows the content of the editor to be programmatically set.
-- `InsertImage` (`string`) - Inserts an image at the current point in the editor.
-
 
 ### Basic Example
 Compared to the original project, this fork implements a much simpler way to use the component.
@@ -202,9 +173,3 @@ This fork also implements a simple way to add your own fonts to the editor.
 
 ### Import/Export in docx
 Coming soon
-
-
-### Rich Text Screenshot
-![Screenshot](DeltaExample.png)
-### Read Only Screenshot
-![Screenshot](InlineEditingExample.png)
