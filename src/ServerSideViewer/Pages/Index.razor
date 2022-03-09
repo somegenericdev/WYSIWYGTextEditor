@@ -1,0 +1,41 @@
+﻿@page "/"
+@using MudTextEditor
+
+<style>
+    /*SET THE DEFAULT FONT*/
+    #TestId {
+        font-family: "MS Gothic";
+        font-size: 18px;
+        height: 375px;
+    }
+
+    /*DEFINE ALL OF THE CUSTOM FONTS*/
+    .ql-font-MSGothic {
+        font-family: 'MS Gothic';
+    }
+
+    .ql-font-Bahnschrift {
+        font-family: 'Bahnschrift'
+    }
+
+    .ql-font-Impact {
+        font-family: 'Impact';
+    }
+
+    .ql-font-Courier {
+        font-family: 'Courier';
+    }
+
+    .ql-font-Comic {
+        font-family: 'Comic Sans MS';
+    }
+</style>
+
+<TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@_myEditor" Fonts="_fonts"
+            Placeholder="Enter non HTML format like centering...">
+</TextEditor>
+
+@code{
+	readonly List<string> _fonts = new List<string> { "MSGothic", "Impact", "Courier", "Comic", "Bahnschrift" }; //be sure to set the default font as the first in the list
+    TextEditor? _myEditor;
+}

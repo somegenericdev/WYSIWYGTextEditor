@@ -1,14 +1,14 @@
-# Blazored TextEditor
-WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor](https://github.com/Blazored/TextEditor)
+# MudBlazor.Extensions.TextEditor
+WYSIWYG Rich Text Editor for MudBlazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored TextEditor](https://github.com/somegenericdev/WYSIWYGTextEditor)
 
-![Screenshot](HTMLExample.png)
+![Screenshot](content/HTMLExample.png)
 
 
 ### Installing
 
 You can install from NuGet using the following command:
 
-`Install-Package WYSIWYGTextEditor`
+`Install-Package TextEditor`
 
 Or via the Visual Studio package manger.
 
@@ -26,8 +26,8 @@ Then add the JS script at the bottom of the page using the following script tag.
 
 ```html
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="_content/WYSIWYGTextEditor/quill-blot-formatter.min.js"></script>
-    <script src="_content/WYSIWYGTextEditor/BlazorQuill.js"></script>
+    <script src="_content/TextEditor/quill-blot-formatter.min.js"></script>
+    <script src="_content/TextEditor/BlazorQuill.js"></script>
 ```
 
 **NOTE** If you're using Blazor WebAssembly then these need to be added to your `wwwroot\index.html`.
@@ -35,7 +35,7 @@ Then add the JS script at the bottom of the page using the following script tag.
 You can add the following using statement to your main `_Imports.razor` to make referencing the component a bit easier.
 
 ```cs
-@using WYSIWYGTextEditor
+@using TextEditor
 ```
 
 ## Usage
@@ -68,7 +68,7 @@ Below is a list of all the options available on the Text Editor.
 Compared to the original project, this fork implements a much simpler way to use the component.
 
 ```cs
-@using WYSIWYGTextEditor
+@using TextEditor
 <TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor"
                     Placeholder="Enter non HTML format like centering...">
 </TextEditor>
@@ -81,7 +81,7 @@ Compared to the original project, this fork implements a much simpler way to use
 However, should you wish to for some reason, you can still use the component in the old, more verbose way.
 
 ```cs
-@using WYSIWYGTextEditor
+@using TextEditor
 
 <TextEditor @ref="@QuillHtml">
     <ToolbarContent>
@@ -157,7 +157,7 @@ string QuillHTMLContent;
 This fork also implements a simple way to add your own fonts to the editor.
 
 ```cs
-@using WYSIWYGTextEditor
+@using TextEditor
 
 <style>
     /*SET THE DEFAULT FONT*/
@@ -205,6 +205,6 @@ Coming soon
 
 
 ### Rich Text Screenshot
-![Screenshot](DeltaExample.png)
+![Screenshot](content/DeltaExample.png)
 ### Read Only Screenshot
-![Screenshot](InlineEditingExample.png)
+![Screenshot](content/InlineEditingExample.png)

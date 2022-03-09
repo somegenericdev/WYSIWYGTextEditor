@@ -1,0 +1,212 @@
+﻿@page "/"
+@using MudTextEditor
+
+<TextEditor @ref="@_quillHtml">
+	<ToolbarContent>
+		<select class="ql-header">
+			<option selected=""></option>
+			<option value="1"></option>
+			<option value="2"></option>
+			<option value="3"></option>
+			<option value="4"></option>
+			<option value="5"></option>
+		</select>
+		<span class="ql-formats">
+			<button class="ql-bold"></button>
+			<button class="ql-italic"></button>
+			<button class="ql-underline"></button>
+			<button class="ql-strike"></button>
+		</span>
+		<span class="ql-formats">
+			<select class="ql-color"></select>
+			<select class="ql-background"></select>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-list" value="ordered"></button>
+			<button class="ql-list" value="bullet"></button>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-link"></button>
+		</span>
+	</ToolbarContent>
+	<EditorContent>
+		<h4>This Toolbar works with HTML</h4>
+		<a href="http://BlazorHelpWebsite.com">
+			BlazorHelpWebsite.com
+		</a>
+	</EditorContent>
+</TextEditor>
+<br/>
+<button class="btn btn-primary"
+        @onclick="GetHtml">
+	Get HTML
+</button>
+<button class="btn btn-primary"
+        @onclick="SetHtml">
+	Set HTML
+</button>
+<br/>
+<div>
+	<br/>
+	@((MarkupString) _quillHtmlContent!)
+	@_quillHtmlContent
+</div>
+<br/>
+<TextEditor @ref="@_quillNative"
+            Placeholder="Enter non HTML format like centering...">
+	<ToolbarContent>
+		<span class="ql-formats">
+			<select class="ql-font">
+				<option selected=""></option>
+				<option value="serif"></option>
+				<option value="monospace"></option>
+			</select>
+			<select class="ql-size">
+				<option value="small"></option>
+				<option selected=""></option>
+				<option value="large"></option>
+				<option value="huge"></option>
+			</select>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-bold"></button>
+			<button class="ql-italic"></button>
+			<button class="ql-underline"></button>
+			<button class="ql-strike"></button>
+		</span>
+		<span class="ql-formats">
+			<select class="ql-color"></select>
+			<select class="ql-background"></select>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-list" value="ordered"></button>
+			<button class="ql-list" value="bullet"></button>
+			<button class="ql-indent" value="-1"></button>
+			<button class="ql-indent" value="+1"></button>
+			<select class="ql-align">
+				<option selected=""></option>
+				<option value="center"></option>
+				<option value="right"></option>
+				<option value="justify"></option>
+			</select>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-link"></button>
+		</span>
+	</ToolbarContent>
+</TextEditor>
+<br/>
+<button class="btn btn-primary"
+        @onclick="GetContent">
+	Get Content
+</button>
+<button class="btn btn-primary"
+        @onclick="LoadContent">
+	Load Content
+</button>
+<button class="btn btn-primary"
+        @onclick="InsertImage">
+	Insert Image
+</button>
+<br/>
+<br/>
+<div>
+	@_quillContent
+</div>
+<br/>
+<br/>
+
+
+<TextEditor @ref="@_quillReadOnly"
+            ReadOnly="true"
+            Theme="bubble"
+            DebugLevel="log">
+	<ToolbarContent>
+		<select class="ql-header">
+			<option selected=""></option>
+			<option value="1"></option>
+			<option value="2"></option>
+			<option value="3"></option>
+			<option value="4"></option>
+			<option value="5"></option>
+		</select>
+		<span class="ql-formats">
+			<button class="ql-bold"></button>
+			<button class="ql-italic"></button>
+			<button class="ql-underline"></button>
+			<button class="ql-strike"></button>
+		</span>
+		<span class="ql-formats">
+			<select class="ql-color"></select>
+			<select class="ql-background"></select>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-list" value="ordered"></button>
+			<button class="ql-list" value="bullet"></button>
+		</span>
+		<span class="ql-formats">
+			<button class="ql-link"></button>
+		</span>
+	</ToolbarContent>
+	<EditorContent>
+		@((MarkupString) QuillReadOnlyContent)
+	</EditorContent>
+</TextEditor>
+<br/>
+<button class="btn btn-info"
+        @onclick="ToggleQuillEditor">
+	Toggle Editor
+</button>
+
+@code {
+	TextEditor? _quillHtml;
+	TextEditor? _quillNative;
+	TextEditor? _quillReadOnly;
+
+	string? _quillHtmlContent;
+	string? _quillContent;
+
+	private const string QuillReadOnlyContent = @"<span><b>Read Only</b> <u>Content</u></span>";
+
+	bool _mode;
+
+	private async void GetHtml()
+	{
+		_quillHtmlContent = await _quillHtml!.GetHtml();
+		StateHasChanged();
+	}
+
+	private async void SetHtml()
+	{
+		const string quillContent = @"<a href='http://BlazorHelpWebsite.com/'>" +
+		                            "<img src='images/BlazorHelpWebsite.gif' /></a>";
+
+		await _quillHtml!.LoadHtmlContent(quillContent);
+		StateHasChanged();
+	}
+
+	private async void GetContent()
+	{
+		_quillContent = await _quillNative!.GetContent();
+		StateHasChanged();
+	}
+
+	private async void LoadContent()
+	{
+		await _quillNative!.LoadContent(_quillContent);
+		StateHasChanged();
+	}
+
+	private async void InsertImage()
+	{
+		await _quillNative!.InsertImage("images/BlazorHelpWebsite.gif");
+		StateHasChanged();
+	}
+
+	async Task ToggleQuillEditor()
+	{
+		_mode = !_mode;
+		await _quillReadOnly!.EnableEditor(_mode);
+	}
+
+}
