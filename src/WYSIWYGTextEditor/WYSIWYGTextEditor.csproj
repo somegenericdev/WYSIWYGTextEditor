@@ -27,6 +27,7 @@
 
   <ItemGroup>
     <None Include="wwwroot\BlazorQuill.js" />
+    <None Include="wwwroot\quill-blot-formatter.min.js" />
   </ItemGroup>
 
 </Project>
