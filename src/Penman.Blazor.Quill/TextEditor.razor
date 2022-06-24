@@ -1,21 +1,23 @@
 ﻿@using Penman.Blazor.Quill.Internal
 @inject IJSRuntime JsRuntime
 @namespace Penman.Blazor.Quill
-<div @ref="@_toolBar">
-    @if (Toolbar != null)
-    {
-        <CascadingValue Value="Toolbar">
-            <CascadingValue Value="Fonts">
-                <ToolbarContentComposer></ToolbarContentComposer>
+<div id="editor-container">
+    <div @ref="@_toolBar" class="toolbar sticky">
+        @if (Toolbar != null)
+        {
+            <CascadingValue Value="Toolbar">
+                <CascadingValue Value="Fonts">
+                    <ToolbarContentComposer></ToolbarContentComposer>
+                </CascadingValue>
             </CascadingValue>
-        </CascadingValue>
+        }
 
-    }
+        @ToolbarContent
+    </div>
+    <div id="editor" @ref="@_quillElement">
+        @EditorContent
+    </div>
 
-    @ToolbarContent
-</div>
-<div id="@EditorContainerId" @ref="@_quillElement">
-    @EditorContent
 </div>
 
 @code {
@@ -23,8 +25,7 @@
     public Toolbar Toolbar { get; set; }
     [Parameter]
     public List<string> Fonts { get; set; }
-    [Parameter]
-    public string EditorContainerId { get; set; }
+
     [Parameter]
     public RenderFragment EditorContent { get; set; }
 

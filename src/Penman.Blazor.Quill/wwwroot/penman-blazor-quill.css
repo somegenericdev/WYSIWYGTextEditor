@@ -1,0 +1,16 @@
+﻿.toolbar {
+    width: 100%;
+    height: 40px;
+    border-bottom: 2px solid blue;
+}
+
+
+.toolbar.sticky {
+    position: fixed;
+    z-index: 2;
+    background-color: rgba(255,255,255,0.9);
+}
+
+.toolbar.sticky + #editor {
+    padding-top: 84px;
+}

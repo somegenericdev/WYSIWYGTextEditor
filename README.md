@@ -13,11 +13,12 @@ You can install from NuGet using the following command:
 Or via the Visual Studio package manger.
 
 ### Setup
-Add the following CSS files to `_Host.cshtml` if you're using Blazor Server or to `index.html` if you're using Blazor WebAssembly
+Add the following CSS files to `_Host.cshtml` if you're using Blazor Server or to `index.html` if you're using Blazor WASM
 
 ```html
-    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
-    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+    <link href="//cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet" />
+    <link href="//cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet" />
+    <link href="_content/Penman.Blazor.Quill/penman-blazor-quill.css" rel="stylesheet" />
 ```
 And then do the same with the Javascript files
 
@@ -27,7 +28,8 @@ And then do the same with the Javascript files
     <script src="_content/Penman.Blazor.Quill/penman-blazor-quill.js"></script>
 ```
 
-Add the following using statement to `_Imports.razor`.
+
+Optional:  If you don't want to keep adding the namespace to pages, just add the following using statement to `_Imports.razor`.
 
 ```cs
 @using Penman.Blazor.Quill
@@ -172,7 +174,7 @@ This fork also implements a simple way to add your own fonts to the editor.
 ```
 ## Advanced functionality
 
-### Following Toolbar
+### Sticky Snow Toolbar
 
 On longer documents, it becomes tedious and unusable to have the toolbar lodged up the top, so instead you can configure the snow editor to have the toolbar follow along as you edit
 
