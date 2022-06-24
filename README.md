@@ -1,5 +1,5 @@
-# Blazored TextEditor
-WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com") and was forked from [Blazored.TextEditor](https://github.com/Blazored/TextEditor)
+# Penman.Blazor.Quill TextEditor
+Penman.Blazor.Quill Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com")
 
 ![Screenshot](Screenshot.png)
 
@@ -8,7 +8,7 @@ WYSIWYG Rich Text Editor for Blazor applications - Uses [Quill JS](https://quill
 
 You can install from NuGet using the following command:
 
-`Install-Package WYSIWYGTextEditor`
+`Install-Package Penman.Blazor.Quill`
 
 Or via the Visual Studio package manger.
 
@@ -23,14 +23,14 @@ And then do the same with the Javascript files
 
 ```html
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
-    <script src="_content/WYSIWYGTextEditor/quill-blot-formatter.min.js"></script>
-    <script src="_content/WYSIWYGTextEditor/BlazorQuill.js"></script>
+    <script src="_content/Penman.Blazor.Quill/quill-blot-formatter.min.js"></script>
+    <script src="_content/Penman.Blazor.Quill/BlazorQuill.js"></script>
 ```
 
 Add the following using statement to `_Imports.razor`.
 
 ```cs
-@using WYSIWYGTextEditor
+@using Penman.Blazor.Quill
 ```
 
 ## Usage
@@ -39,7 +39,7 @@ Add the following using statement to `_Imports.razor`.
 Compared to the original project, this fork implements a much simpler way to use the component.
 
 ```cs
-@using WYSIWYGTextEditor
+@using Penman.Blazor.Quill
 <TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor"
                     Placeholder="Enter non HTML format like centering...">
 </TextEditor>
@@ -52,7 +52,7 @@ Compared to the original project, this fork implements a much simpler way to use
 However, should you wish to for some reason, you can still use the component in the old, more verbose way.
 
 ```cs
-@using WYSIWYGTextEditor
+@using Penman.Blazor.Quill
 
 <TextEditor @ref="@QuillHtml">
     <ToolbarContent>
@@ -128,7 +128,7 @@ string QuillHTMLContent;
 This fork also implements a simple way to add your own fonts to the editor.
 
 ```cs
-@using WYSIWYGTextEditor
+@using Penman.Blazor.Quill
 
 <style>
     /*SET THE DEFAULT FONT*/
@@ -168,6 +168,15 @@ This fork also implements a simple way to add your own fonts to the editor.
     List<string> Fonts = new List<string> { "MSGothic", "Impact", "Courier", "Comic", "Bahnschrift" }; //be sure to set the default font as the first in the list
     TextEditor MyEditor;
 }
+
+```
+## Advanced functionality
+
+### Following Toolbar
+
+On longer documents, it becomes tedious and unusable to have the toolbar lodged up the top, so instead you can configure the snow editor to have the toolbar follow along as you edit
+
+```
 
 ```
 

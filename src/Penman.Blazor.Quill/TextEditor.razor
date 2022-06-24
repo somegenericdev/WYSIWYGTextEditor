@@ -1,0 +1,114 @@
+﻿@using Penman.Blazor.Quill.Internal
+@inject IJSRuntime JsRuntime
+@namespace Penman.Blazor.Quill
+<div @ref="@_toolBar">
+    @if (Toolbar != null)
+    {
+        <CascadingValue Value="Toolbar">
+            <CascadingValue Value="Fonts">
+                <ToolbarContentComposer></ToolbarContentComposer>
+            </CascadingValue>
+        </CascadingValue>
+
+    }
+
+    @ToolbarContent
+</div>
+<div id="@EditorContainerId" @ref="@_quillElement">
+    @EditorContent
+</div>
+
+@code {
+    [Parameter]
+    public Toolbar Toolbar { get; set; }
+    [Parameter]
+    public List<string> Fonts { get; set; }
+    [Parameter]
+    public string EditorContainerId { get; set; }
+    [Parameter]
+    public RenderFragment EditorContent { get; set; }
+
+    [Parameter]
+    public RenderFragment ToolbarContent { get; set; }
+
+    [Parameter]
+    public bool ReadOnly { get; set; }
+        = false;
+
+    [Parameter]
+    public string Placeholder { get; set; }
+        = "Compose an epic...";
+
+    [Parameter]
+    public string Theme { get; set; }
+        = "snow";
+
+    [Parameter]
+    public string DebugLevel { get; set; }
+        = "info";
+
+    private ElementReference _quillElement;
+    private ElementReference _toolBar;
+
+    protected override async Task
+        OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Interop.CreateQuill(
+                JsRuntime,
+                _quillElement,
+                _toolBar,
+                ReadOnly,
+                Placeholder,
+                Theme,
+                DebugLevel, Fonts);
+        }
+    }
+
+    public async Task<string> GetText()
+    {
+        return await Interop.GetText(
+            JsRuntime, _quillElement);
+    }
+
+    public async Task<string> GetHTML()
+    {
+        return await Interop.GetHtml(
+            JsRuntime, _quillElement);
+    }
+
+    public async Task<string> GetContent()
+    {
+        return await Interop.GetContent(
+            JsRuntime, _quillElement);
+    }
+
+    public async Task LoadContent(string content)
+    {
+        var QuillDelta =
+            await Interop.LoadQuillContent(
+                JsRuntime, _quillElement, content);
+    }
+
+    public async Task LoadHTMLContent(string quillHtmlContent)
+    {
+        var QuillDelta =
+            await Interop.LoadQuillHtmlContent(
+                JsRuntime, _quillElement, quillHtmlContent);
+    }
+
+    public async Task InsertImage(string imageUrl)
+    {
+        var QuillDelta =
+            await Interop.InsertQuillImage(
+                JsRuntime, _quillElement, imageUrl);
+    }
+
+    public async Task EnableEditor(bool mode)
+    {
+        var QuillDelta =
+            await Interop.EnableQuillEditor(
+                JsRuntime, _quillElement, mode);
+    }
+}
