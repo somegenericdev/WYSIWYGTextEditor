@@ -2,7 +2,7 @@
 @inject IJSRuntime JsRuntime
 @namespace Penman.Blazor.Quill
 <div id="editor-container">
-    <div @ref="@_toolBar" class="toolbar sticky">
+    <div @ref="@_toolBar" class="@CalculateToolBarClass(Toolbar)">
         @if (Toolbar != null)
         {
             <CascadingValue Value="Toolbar">
@@ -11,7 +11,6 @@
                 </CascadingValue>
             </CascadingValue>
         }
-
         @ToolbarContent
     </div>
     <div id="editor" @ref="@_quillElement">
@@ -25,6 +24,9 @@
     public Toolbar Toolbar { get; set; }
     [Parameter]
     public List<string> Fonts { get; set; }
+
+    [Parameter]
+    public bool StickyToolBar { get; set; } = false;
 
     [Parameter]
     public RenderFragment EditorContent { get; set; }
@@ -41,8 +43,8 @@
         = "Compose an epic...";
 
     [Parameter]
-    public string Theme { get; set; }
-        = "snow";
+    public EditorTheme Theme { get; set; } = EditorTheme.Snow;
+
 
     [Parameter]
     public string DebugLevel { get; set; }
@@ -62,7 +64,7 @@
                 _toolBar,
                 ReadOnly,
                 Placeholder,
-                Theme,
+                Theme.ToString().ToLower(),
                 DebugLevel, Fonts);
         }
     }
@@ -112,4 +114,24 @@
             await Interop.EnableQuillEditor(
                 JsRuntime, _quillElement, mode);
     }
+
+    private string CalculateToolBarClass(Toolbar toolbar)
+    {
+        var retVal = "toolbar";
+       
+        if (Theme.Equals(EditorTheme.Bubble))
+        {
+            return "";
+        }
+
+        if (StickyToolBar)
+        {
+            retVal += " sticky";
+        }
+
+        return retVal;
+    }
+
+
 }
+

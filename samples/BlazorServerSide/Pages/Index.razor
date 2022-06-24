@@ -1,6 +1,8 @@
 ﻿@page "/"
 
-<TextEditor @ref="@_quillHtml">
+<TextEditor @ref="@_quillHtml" 
+            Theme="EditorTheme.Snow"
+            StickyToolBar="true">
     <ToolbarContent>
         <select class="ql-header">
             <option selected=""></option>
@@ -118,7 +120,7 @@
 
 <TextEditor @ref="@_quillReadOnly"
                     ReadOnly="true"
-                    Theme="bubble"
+                    Theme="EditorTheme.Bubble"
                     DebugLevel="log">
     <ToolbarContent>
         <select class="ql-header">

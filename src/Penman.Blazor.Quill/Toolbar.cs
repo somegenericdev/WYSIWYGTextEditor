@@ -6,11 +6,11 @@
 
         public bool ShowFullToolbar
         {
-            get { return _showFullToolbar; }
+            get => _showFullToolbar;
             set
             {
                 _showFullToolbar = value;
-                if (value == true)
+                if (value)
                 {
                     SetAllPropertiesToTrue();
                 }
@@ -33,7 +33,6 @@
         public bool ShowEmbedVideoControls { get; set; }
         public bool ShowMathControls { get; set; }
         public bool ShowCleanFormattingControls { get; set; }
-
         public void SetAllPropertiesToTrue()
         {
             ShowFontControls = true;
