@@ -1,7 +1,7 @@
 ﻿.toolbar {
     width: 100%;
     height: 40px;
-    border-bottom: 2px solid blue;
+    border-bottom: 2px solid;
 }
 
 
@@ -12,5 +12,5 @@
 }
 
 .toolbar.sticky + #editor {
-    padding-top: 84px;
+    padding-top: 40px;
 }
