@@ -24,7 +24,7 @@ And then do the same with the Javascript files
 ```html
     <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
     <script src="_content/Penman.Blazor.Quill/quill-blot-formatter.min.js"></script>
-    <script src="_content/Penman.Blazor.Quill/BlazorQuill.js"></script>
+    <script src="_content/Penman.Blazor.Quill/penman-blazor-quill.js"></script>
 ```
 
 Add the following using statement to `_Imports.razor`.
