@@ -1,5 +1,5 @@
 # Penman.Blazor.Quill TextEditor
-Penman.Blazor.Quill Rich Text Editor for Blazor applications - Uses [Quill JS](https://quilljs.com/ "Quill JS.com")
+Penman.Blazor.Quill Rich Text Editor for Blazor applications - Built on top of [Quill JS](https://quilljs.com/ "Quill JS.com")
 
 ![Screenshot](Screenshot.png)
 
@@ -37,13 +37,31 @@ Optional:  If you don't want to keep adding the namespace to pages, just add the
 
 ## Usage
 
-### Basic Example
-Compared to the original project, this fork implements a much simpler way to use the component.
+
+### Setting a Quill Theme
+
+Penman.Blazor.Quill supports the two primary Quill Themes
+
+* Snow (default)
+* Bubble (more of a Medium-style pop-up toolbar experience)
+
+In order to set the theme, do the following
+
+```cs
+<TextEditor @ref="@_quillEditor" 
+            Theme="EditorTheme.Bubble">
+</TextEditor>
+```
+
+### Default Toolbar Example
+Building the toolbar is easy.  You can state what you wish by passing in the Toolbar object.
 
 ```cs
 @using Penman.Blazor.Quill
-<TextEditor Toolbar="new Toolbar { ShowFullToolbar=true }" EditorContainerId="TestId" @ref="@MyEditor"
-                    Placeholder="Enter non HTML format like centering...">
+<TextEditor 
+    Toolbar="new Toolbar { ShowFullToolbar=true }"
+    @ref="@MyEditor"
+    Placeholder="Enter non HTML format like centering...">
 </TextEditor>
 @code { 
 	TextEditor MyEditor;
@@ -51,7 +69,7 @@ Compared to the original project, this fork implements a much simpler way to use
 
 ```
 
-However, should you wish to for some reason, you can still use the component in the old, more verbose way.
+Or you can specify the very toolbar elements you want to use.
 
 ```cs
 @using Penman.Blazor.Quill
@@ -127,7 +145,7 @@ string QuillHTMLContent;
 ```
 
 ### Add fonts
-This fork also implements a simple way to add your own fonts to the editor.
+You can add your own fonts to the editor.
 
 ```cs
 @using Penman.Blazor.Quill
@@ -176,9 +194,14 @@ This fork also implements a simple way to add your own fonts to the editor.
 
 ### Sticky Snow Toolbar
 
-On longer documents, it becomes tedious and unusable to have the toolbar lodged up the top, so instead you can configure the snow editor to have the toolbar follow along as you edit
+On longer documents, it becomes tedious and unusable to have the snow toolbar lodged up the top, so instead you can configure the snow editor to have the toolbar follow along as you edit.  Simply pass the EditorTheme.Snow for the Theme and StickyToolBar="true"
+> Note: The bubble editor is not impacted by this at all
 
 ```
+<TextEditor @ref="@_quillHtml" 
+            Theme="EditorTheme.Snow"
+            StickyToolBar="true">
+            ...
 
 ```
 
