@@ -1,7 +1,7 @@
 # Penman.Blazor.Quill TextEditor
 Penman.Blazor.Quill Rich Text Editor for Blazor applications - Built on top of [Quill JS](https://quilljs.com/ "Quill JS.com")
 
-![Screenshot](Screenshot.png)
+![Screenshot](https://raw.githubusercontent.com/domingoladron/Penman.Blazor.Quill/main/Screenshot.png)
 
 
 ### Installing
