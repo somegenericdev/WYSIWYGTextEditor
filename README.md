@@ -14,6 +14,30 @@ Or via the Visual Studio package manger.
 
 ### Setup
 
+
+### Add PenmanQuill to your service collection
+Add a reference to the PenmanQuill services to your Program.cs (Wasm) or Startup.cs (Server)
+
+#### **Blazor Server Startup**
+```cs
+ public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddRazorPages();
+            services.AddServerSideBlazor().AddCircuitOptions(options => { 
+                options.DetailedErrors = true; 
+            });
+            
+            services.AddPenmanQuill(); //<-- add this
+        }
+```
+
+#### **Blazor Wasm Program**
+
+```cs
+    builder.Services.AddPenmanQuill();
+```
+
+
 #### Add CSS and Javascript to your Blazor site
 Add the following CSS files to `_Host.cshtml` if you're using Blazor Server or to `index.html` if you're using Blazor WASM
 
