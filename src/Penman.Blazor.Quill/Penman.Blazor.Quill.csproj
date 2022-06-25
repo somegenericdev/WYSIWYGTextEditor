@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RazorLangVersion>3.0</RazorLangVersion>
     <RootNamespace>Penman.Blazor.Quill</RootNamespace>
 
@@ -13,16 +13,28 @@
     <Copyright>Copyright 2022 (c) domingoladron. All rights reserved.</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/domingoladron/Penman.Blazor.Quill</PackageProjectUrl>
-	<PackageIconUrl>https://raw.githubusercontent.com/somegenericdev/TextEditor/main/src/WYSIWYGTextEditor/wwwroot/QuillLogo.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/domingoladron/Penman.Blazor.Quill</RepositoryUrl>
+	  <RepositoryUrl>https://github.com/domingoladron/Penman.Blazor.Quill</RepositoryUrl>
     <PackageTags>Blazor Rich Text Editor Quill QuillJS WYSIWYG Blazored Razor Components</PackageTags>
     <Company />
-    <PackageReleaseNotes>Allows images to be resized</PackageReleaseNotes>
+    <PackageReleaseNotes>First release (not perfect for scrolling toolbar, but a good start)</PackageReleaseNotes>
+    <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.0" />
+    <None Remove="icon.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="icon.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.6" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="6.0.6" />
   </ItemGroup>
 
   <ItemGroup>

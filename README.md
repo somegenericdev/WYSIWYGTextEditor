@@ -13,6 +13,8 @@ You can install from NuGet using the following command:
 Or via the Visual Studio package manger.
 
 ### Setup
+
+#### Add CSS and Javascript to your Blazor site
 Add the following CSS files to `_Host.cshtml` if you're using Blazor Server or to `index.html` if you're using Blazor WASM
 
 ```html
@@ -28,12 +30,13 @@ And then do the same with the Javascript files
     <script src="_content/Penman.Blazor.Quill/penman-blazor-quill.js"></script>
 ```
 
-
 Optional:  If you don't want to keep adding the namespace to pages, just add the following using statement to `_Imports.razor`.
 
 ```cs
 @using Penman.Blazor.Quill
 ```
+
+
 
 ## Usage
 
@@ -204,6 +207,3 @@ On longer documents, it becomes tedious and unusable to have the snow toolbar lo
             ...
 
 ```
-
-### Import/Export in docx
-Coming soon
