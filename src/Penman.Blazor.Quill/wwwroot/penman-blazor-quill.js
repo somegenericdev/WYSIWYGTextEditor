@@ -57,6 +57,6 @@
                     .retain(editorIndex)
                     .insert({ image: imageURL },
                         { alt: imageURL }));
-        },
+        }
     };
 })();
