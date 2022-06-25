@@ -174,7 +174,7 @@
 
     public async void GetHtml()
     {
-        _quillHtmlContent = await this._quillHtml.GetHTML();
+        _quillHtmlContent = await this._quillHtml.GetHtml();
         StateHasChanged();
     }
 
@@ -184,7 +184,7 @@
             @"<a href='http://BlazorHelpWebsite.com/'>" +
             "<img src='images/BlazorHelpWebsite.gif' /></a>";
 
-        await this._quillHtml.LoadHTMLContent(QuillContent);
+        await this._quillHtml.LoadHtmlContent(QuillContent);
         StateHasChanged();
     }
 

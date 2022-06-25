@@ -75,7 +75,7 @@
             JsRuntime, _quillElement);
     }
 
-    public async Task<string> GetHTML()
+    public async Task<string> GetHtml()
     {
         return await Interop.GetHtml(
             JsRuntime, _quillElement);
@@ -89,30 +89,26 @@
 
     public async Task LoadContent(string content)
     {
-        var QuillDelta =
-            await Interop.LoadQuillContent(
-                JsRuntime, _quillElement, content);
+        await Interop.LoadQuillContent(
+            JsRuntime, _quillElement, content);
     }
 
-    public async Task LoadHTMLContent(string quillHtmlContent)
+    public async Task LoadHtmlContent(string quillHtmlContent)
     {
-        var QuillDelta =
-            await Interop.LoadQuillHtmlContent(
-                JsRuntime, _quillElement, quillHtmlContent);
+        await Interop.LoadQuillHtmlContent(
+            JsRuntime, _quillElement, quillHtmlContent);
     }
 
     public async Task InsertImage(string imageUrl)
     {
-        var QuillDelta =
-            await Interop.InsertQuillImage(
-                JsRuntime, _quillElement, imageUrl);
+        await Interop.InsertQuillImage(
+            JsRuntime, _quillElement, imageUrl);
     }
 
     public async Task EnableEditor(bool mode)
     {
-        var QuillDelta =
-            await Interop.EnableQuillEditor(
-                JsRuntime, _quillElement, mode);
+        await Interop.EnableQuillEditor(
+            JsRuntime, _quillElement, mode);
     }
 
     private string CalculateToolBarClass(Toolbar toolbar)
