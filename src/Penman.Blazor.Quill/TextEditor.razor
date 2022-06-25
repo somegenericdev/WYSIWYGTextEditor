@@ -1,8 +1,13 @@
 ﻿@using Penman.Blazor.Quill.Internal
+@using Majorsoft.Blazor.Components.Common.JsInterop.Scroll
+@using Majorsoft.Blazor.Components.Common.JsInterop
+@using Majorsoft.Blazor.Components.Common.JsInterop.ElementInfo
 @inject IJSRuntime JsRuntime
+@implements IAsyncDisposable
+@inject IScrollHandler ScrollHandler
 @namespace Penman.Blazor.Quill
 <div id="editor-container">
-    <div @ref="@_toolBar" class="@CalculateToolBarClass(Toolbar)">
+    <div @ref="@_toolBar" id="toolBar" class="@CalculateToolBarClass(Toolbar)">
         @if (Toolbar != null)
         {
             <CascadingValue Value="Toolbar">
@@ -51,6 +56,12 @@
 
     private ElementReference _quillElement;
     private ElementReference _toolBar;
+    private string _scrollEventId = null;
+    private ElementReference _scrollToView;
+    private ElementReference _log;
+    private string _logMessage;
+    private double _pageScrolledY;
+
 
     protected override async Task
         OnAfterRenderAsync(bool firstRender)
@@ -66,6 +77,25 @@
                 Theme.ToString().ToLower(),
                 DebugLevel, Fonts);
         }
+
+        await ScrollEventHandler();
+    }
+
+    private async Task ScrollEventHandler()
+    {
+        if (StickyToolBar)
+        {
+            _scrollEventId = await ScrollHandler.RegisterPageScrollAsync(PageScrolled);
+        }
+    }
+
+
+    private async Task PageScrolled(ScrollEventArgs args)
+    {
+        _pageScrolledY = args.Y;
+
+        await _toolBar.ScrollToYAsync(_pageScrolledY);
+        StateHasChanged();
     }
 
     public async Task<string> GetText()
@@ -127,6 +157,12 @@
         return retVal;
     }
 
-
+    public async ValueTask DisposeAsync()
+    {
+        if (ScrollHandler is not null)
+        {
+            await ScrollHandler.DisposeAsync();
+        }
+    }
 }
 
