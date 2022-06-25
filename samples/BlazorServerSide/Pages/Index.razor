@@ -1,8 +1,6 @@
 ﻿@page "/"
-
-<TextEditor @ref="@_quillHtml" 
-            Theme="EditorTheme.Snow"
-            StickyToolBar="true">
+<div class="standardEditor">
+<TextEditor @ref="@_quillHtml" StickyToolBar="true">
     <ToolbarContent>
         <select class="ql-header">
             <option selected=""></option>
@@ -37,6 +35,7 @@
         </a>
     </EditorContent>
 </TextEditor>
+</div>
 <br />
 <button class="btn btn-primary"
         @onclick="GetHtml">

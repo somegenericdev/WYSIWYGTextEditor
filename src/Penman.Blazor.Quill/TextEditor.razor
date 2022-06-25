@@ -85,7 +85,8 @@
     {
         if (StickyToolBar)
         {
-            _scrollEventId = await ScrollHandler.RegisterPageScrollAsync(PageScrolled);
+            if(string.IsNullOrEmpty(_scrollEventId)) 
+                _scrollEventId = await ScrollHandler.RegisterPageScrollAsync(PageScrolled);
         }
     }
 
@@ -95,7 +96,6 @@
         _pageScrolledY = args.Y;
 
         await _toolBar.ScrollToYAsync(_pageScrolledY);
-        StateHasChanged();
     }
 
     public async Task<string> GetText()

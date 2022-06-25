@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Penman.Blazor.Quill;
 
 namespace BlazorServerSide
 {
@@ -21,6 +22,7 @@ namespace BlazorServerSide
         {
             services.AddRazorPages();
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddPenmanQuill();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

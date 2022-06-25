@@ -1,6 +1,7 @@
 ﻿@page "/"
-
-<TextEditor @ref="@QuillHtml">
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.3.6/quill.bubble.css" rel="stylesheet">
+<TextEditor @ref="@_quillHtml" Theme="EditorTheme.Snow" StickyToolBar="true">
     <ToolbarContent>
         <select class="ql-header">
             <option selected=""></option>
@@ -37,21 +38,21 @@
 </TextEditor>
 <br />
 <button class="btn btn-primary"
-        @onclick="GetHTML">
+        @onclick="GetHtml">
     Get HTML
 </button>
 <button class="btn btn-primary"
-        @onclick="SetHTML">
+        @onclick="SetHtml">
     Set HTML
 </button>
 <br />
 <div>
     <br />
-    @((MarkupString)QuillHTMLContent)
-    @QuillHTMLContent
+    @((MarkupString)_quillHtmlContent)
+    @_quillHtmlContent
 </div>
 <br />
-<TextEditor @ref="@QuillNative"
+@*<TextEditor @ref="@_quillNative"
                     Placeholder="Enter non HTML format like centering...">
     <ToolbarContent>
         <span class="ql-formats">
@@ -110,13 +111,13 @@
 <br />
 <br />
 <div>
-    @QuillContent
+    @_quillContent
 </div>
 <br />
 <br />
 
 
-<TextEditor @ref="@QuillReadOnly"
+<TextEditor @ref="@_quillReadOnly"
                     ReadOnly="true"
                     Theme="EditorTheme.Bubble"
                     DebugLevel="log">
@@ -148,7 +149,7 @@
         </span>
     </ToolbarContent>
     <EditorContent>
-        @((MarkupString)@QuillReadOnlyContent)
+        @((MarkupString)_quillReadOnlyContent)
     </EditorContent>
 </TextEditor>
 <br />
@@ -156,53 +157,54 @@
         @onclick="ToggleQuillEditor">
     Toggle Editor
 </button>
-
+*@
 @code {
-    TextEditor QuillHtml;
-    TextEditor QuillNative;
-    TextEditor QuillReadOnly;
+    TextEditor _quillHtml;
+    TextEditor _quillNative;
+    TextEditor _quillReadOnly;
 
-    string QuillHTMLContent;
-    string QuillContent;
-    string QuillReadOnlyContent =
+    string _quillHtmlContent;
+    string _quillContent;
+
+    readonly string _quillReadOnlyContent =
         @"<span><b>Read Only</b> <u>Content</u></span>";
 
-    bool mode = false;
+    bool _mode = false;
 
-    public async void GetHTML()
+    public async void GetHtml()
     {
-        QuillHTMLContent = await this.QuillHtml.GetHtml();
+        _quillHtmlContent = await this._quillHtml.GetHtml();
         StateHasChanged();
     }
 
-    public async void SetHTML()
+    public async void SetHtml()
     {
         string QuillContent =
             @"<a href='http://BlazorHelpWebsite.com/'>" +
             "<img src='images/BlazorHelpWebsite.gif' /></a>";
 
-        await this.QuillHtml.LoadHtmlContent(QuillContent);
+        await this._quillHtml.LoadHtmlContent(QuillContent);
         StateHasChanged();
     }
 
     public async void GetContent()
     {
-        QuillContent = await this.QuillNative.GetContent();
+        _quillContent = await _quillNative.GetContent();
         StateHasChanged();
     }
     public async void LoadContent()
     {
-        await this.QuillNative.LoadContent(QuillContent);
+        await _quillNative.LoadContent(_quillContent);
         StateHasChanged();
     }
     public async void InsertImage()
     {
-        await this.QuillNative.InsertImage("images/BlazorHelpWebsite.gif");
+        await _quillNative.InsertImage("images/BlazorHelpWebsite.gif");
         StateHasChanged();
     }
     async Task ToggleQuillEditor()
     {
-        mode = (!mode);
-        await this.QuillReadOnly.EnableEditor(mode);
+        _mode = (!_mode);
+        await _quillReadOnly.EnableEditor(_mode);
     }
 }
