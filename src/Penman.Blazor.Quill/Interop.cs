@@ -90,5 +90,14 @@ namespace Penman.Blazor.Quill
                 quillElement, imageUrl);
         }
 
+
+        internal static ValueTask<object> ConfigureStickyToolbar(
+            IJSRuntime jsRuntime, ElementReference toolbarElement)
+        {
+            return jsRuntime.InvokeAsync<object>(
+                "QuillFunctions.configureStickyToolbar",
+                toolbarElement);
+        }
+
     }
 }

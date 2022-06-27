@@ -1,13 +1,9 @@
 ﻿@using Penman.Blazor.Quill.Internal
-@using Majorsoft.Blazor.Components.Common.JsInterop.Scroll
-@using Majorsoft.Blazor.Components.Common.JsInterop
-@using Majorsoft.Blazor.Components.Common.JsInterop.ElementInfo
 @inject IJSRuntime JsRuntime
-@implements IAsyncDisposable
-@inject IScrollHandler ScrollHandler
+
 @namespace Penman.Blazor.Quill
 <div id="editor-container">
-    <div @ref="@_toolBar" id="toolBar" class="@CalculateToolBarClass(Toolbar)">
+    <div @ref="@_toolBar" id="@_generatedToolBarId" class="@CalculateToolBarClass(Toolbar)">
         @if (Toolbar != null)
         {
             <CascadingValue Value="Toolbar">
@@ -85,17 +81,8 @@
     {
         if (StickyToolBar)
         {
-            if(string.IsNullOrEmpty(_scrollEventId)) 
-                _scrollEventId = await ScrollHandler.RegisterPageScrollAsync(PageScrolled);
+            await Interop.ConfigureStickyToolbar(JsRuntime, _toolBar);
         }
-    }
-
-
-    private async Task PageScrolled(ScrollEventArgs args)
-    {
-        _pageScrolledY = args.Y;
-
-        await _toolBar.ScrollToYAsync(_pageScrolledY);
     }
 
     public async Task<string> GetText()
@@ -157,12 +144,16 @@
         return retVal;
     }
 
-    public async ValueTask DisposeAsync()
+    private string _generatedToolBarId = ConstructToolbarId();
+
+    private static string ConstructToolbarId()
     {
-        if (ScrollHandler is not null)
-        {
-            await ScrollHandler.DisposeAsync();
-        }
+        var random = new Random();
+        const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var rando = new string(Enumerable.Repeat(chars, 6)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
+        return $"toolbar-{rando}";
     }
+
 }
 

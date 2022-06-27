@@ -3,7 +3,8 @@
     border-bottom: 2px solid;
 }
 
-.toolbar.sticky {
-    z-index: 2000;
-    background-color: rgba(255,255,255,0.9);
-}
+    .toolbar.sticky {
+        z-index: 2000;
+        position: sticky;
+        background-color: rgba(255,255,255,0.9);
+    }

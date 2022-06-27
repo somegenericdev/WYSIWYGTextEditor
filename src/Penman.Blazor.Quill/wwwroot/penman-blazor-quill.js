@@ -57,6 +57,27 @@
                     .retain(editorIndex)
                     .insert({ image: imageURL },
                         { alt: imageURL }));
+        },
+        configureStickyToolbar: function (toolbarElement) {
+            
+            window.onscroll = function(e) {
+                var verticalPosition = 0;
+                if (pageYOffset) //usual
+                    verticalPosition = pageYOffset;
+                else if (document.documentElement.clientHeight) //ie
+                    verticalPosition = document.documentElement.scrollTop;
+                else if (document.body) //ie quirks
+                    verticalPosition = document.body.scrollTop;
+                console.log(verticalPosition);
+                //var toolbarDiv = document.getElementById('toolBar');
+                var toolbarDiv = toolbarElement;
+                if (verticalPosition > 200) {
+                    var scrollDiff = verticalPosition - 200;
+                    toolbarDiv.style.top = (verticalPosition - scrollDiff) + 'px';
+                } else {
+                    toolbarDiv.style.top = (verticalPosition) + 'px';
+                }
+            }
         }
     };
 })();
