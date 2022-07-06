@@ -15,12 +15,19 @@ namespace Penman.Blazor.Quill
             string placeholder,
             string theme,
             string debugLevel,
-            List<string> customFonts=null)
+            string scrollingContainerId,
+            List<string> customFonts = null)
         {
             return jsRuntime.InvokeAsync<object>(
                 "QuillFunctions.createQuill", 
-                quillElement, toolbar, readOnly, 
-                placeholder, theme, debugLevel, customFonts);
+                quillElement, 
+                toolbar, 
+                readOnly, 
+                placeholder, 
+                theme, 
+                debugLevel,
+                scrollingContainerId,
+                customFonts);
         }
 
         internal static ValueTask<string> GetText(

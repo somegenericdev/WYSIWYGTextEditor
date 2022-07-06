@@ -217,6 +217,19 @@ You can add your own fonts to the editor.
 }
 
 ```
+
+## Penman.Blazor.Quill is auto-growing by default
+You need only style the height of the editor's parent div ```#ql-editor-container``` to an appropriate height, 
+and the editor will automatically fill to the size you've specified.  
+    
+**Neat!**
+    
+```css
+    #ql-editor-container {
+    height: 500px;
+    }
+```
+
 ## Advanced functionality
 
 ### Sticky Snow Toolbar

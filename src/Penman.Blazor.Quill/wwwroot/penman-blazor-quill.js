@@ -1,8 +1,14 @@
 ﻿(function () {
     window.QuillFunctions = {        
         createQuill: function (
-            quillElement, toolBar, readOnly,
-            placeholder, theme, debugLevel, customFonts) {  
+            quillElement,
+            toolBar,
+            readOnly,
+            placeholder,
+            theme,
+            debugLevel,
+            editorContainerId,
+            customFonts) {  
 
             Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
@@ -12,6 +18,7 @@
                     toolbar: toolBar,
                     blotFormatter: {}
                 },
+                scrollingContainer: editorContainerId, 
                 placeholder: placeholder,
                 readOnly: readOnly,
                 theme: theme

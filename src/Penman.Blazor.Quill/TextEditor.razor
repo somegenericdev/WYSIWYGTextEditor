@@ -2,7 +2,7 @@
 @inject IJSRuntime JsRuntime
 
 @namespace Penman.Blazor.Quill
-<div id="editor-container">
+<div id="@_editorContainerId">
     <div @ref="@_toolBar" id="@_generatedToolBarId" class="@CalculateToolBarClass(Toolbar)">
         @if (Toolbar != null)
         {
@@ -71,7 +71,9 @@
                 ReadOnly,
                 Placeholder,
                 Theme.ToString().ToLower(),
-                DebugLevel, Fonts);
+                DebugLevel,
+                _editorContainerId,
+                Fonts);
         }
 
         await ScrollEventHandler();
@@ -155,5 +157,6 @@
         return $"toolbar-{rando}";
     }
 
+    private string _editorContainerId = "ql-editor-container";
 }
 
