@@ -1,4 +1,7 @@
-﻿(function () {
+﻿import { ImageUploader } from 'quill.imageUploader.js';
+
+(
+    function () {
     window.QuillFunctions = {        
         createQuill: function (
             quillElement,
@@ -8,16 +11,28 @@
             theme,
             debugLevel,
             editorContainerId,
-            customFonts) {  
+            imageServerUploadEnabled,
+            customFonts) {
 
+            var modulesToLoad = {
+                toolbar: toolBar,
+                blotFormatter: {}
+            };
+
+            if (imageServerUploadEnabled) {
+                //Quill.register("modules/imageUploader", ImageUploader);
+
+                //modulesToLoad["imageUploader"] = {
+                //    upload: (file) => {
+                //        //todo:  make this fucker do something
+                //    }
+                //}
+            }
             Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
             var options = {
                 debug: debugLevel,
-                modules: {
-                    toolbar: toolBar,
-                    blotFormatter: {}
-                },
+                modules: modulesToLoad,
                 scrollingContainer: editorContainerId, 
                 placeholder: placeholder,
                 readOnly: readOnly,

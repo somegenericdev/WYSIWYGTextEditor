@@ -45,6 +45,9 @@
     [Parameter]
     public EditorTheme Theme { get; set; } = EditorTheme.Snow;
 
+    [Parameter]
+    public bool ImageServerUploadEnabled { get; set; } = false;
+
 
     [Parameter]
     public string DebugLevel { get; set; }
@@ -73,6 +76,7 @@
                 Theme.ToString().ToLower(),
                 DebugLevel,
                 _editorContainerId,
+                ImageServerUploadEnabled,
                 Fonts);
         }
 
