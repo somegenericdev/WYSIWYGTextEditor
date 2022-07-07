@@ -8,4 +8,10 @@
     <ProjectReference Include="..\..\src\Penman.Blazor.Quill\Penman.Blazor.Quill.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Pages\ImageUploadToServer.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
 </Project>

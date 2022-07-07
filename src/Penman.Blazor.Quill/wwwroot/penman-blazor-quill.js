@@ -210,6 +210,7 @@
                 debugLevel,
                 editorContainerId,
                 imageServerUploadEnabled,
+                imageServerUploadUrl,
                 customFonts) {
 
                 var modulesToLoad = {
@@ -220,11 +221,25 @@
                 if (imageServerUploadEnabled) {
                     Quill.register("modules/imageUploader", ImageUploader);
                     Quill.register({ "formats/imageBlot": LoadingImage });
-                    //modulesToLoad["imageUploader"] = {
-                    //    upload: (file) => {
-                    //        //todo:  make this fucker do something
-                    //    }
-                    //}
+                    modulesToLoad["imageUploader"] = {
+                        upload: (file) => {
+                            //todo:  make this fucker do something
+                            return new Promise((resolve, reject) => {
+                                const response = window.fetch(imageServerUploadUrl,
+                                    {
+                                        method: 'POST',
+                                        headers: {
+                                        },
+                                        body: file
+                                    });
+
+                                if (response.status === 200) {
+                                    const data = response.text();
+                                    resolve(data);
+                                }
+                            });
+                        }
+                    }
                 }
                 Quill.register('modules/blotFormatter', QuillBlotFormatter.default);
 
