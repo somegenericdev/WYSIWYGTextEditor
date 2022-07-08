@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,10 +10,16 @@ namespace BlazorServerSide.Controllers
     public class ImagesController : ControllerBase
     {
         // GET api/<ImageUploadController>/5
-        [HttpGet("")]
-        public string Get()
+        [HttpGet("{imageName}")]
+        public async Task<IActionResult> Get(string imageName)
         {
-            return "value";
+            var imagePath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "img", imageName);
+
+            if (!System.IO.File.Exists(imagePath))
+                return NotFound(); // returns a NotFoundResult with Status404NotFound response.
+
+            var stream = System.IO.File.OpenRead(imagePath);
+            return File(stream, "application/octet-stream");
         }
 
         // POST api/<ImageUploadController>
@@ -33,6 +40,10 @@ namespace BlazorServerSide.Controllers
 
         private async Task SaveFileAsync(IFormFile imageFile)
         {
+            var imagePath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "img", imageFile.FileName);
+            var createdFile = System.IO.File.Create(imagePath);
+            await imageFile.CopyToAsync(createdFile);
+            createdFile.Close();
             await Task.CompletedTask;
         }
 

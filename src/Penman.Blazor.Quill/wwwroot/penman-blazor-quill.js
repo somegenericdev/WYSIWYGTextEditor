@@ -26,7 +26,6 @@
         LoadingImage.blotName = "imageBlot";
         LoadingImage.className = "image-uploading";
         LoadingImage.tagName = "span";
-        //Quill.register({ "formats/imageBlot": LoadingImage });
 
 
         class ImageUploader {
@@ -223,19 +222,38 @@
                     Quill.register({ "formats/imageBlot": LoadingImage });
                     modulesToLoad["imageUploader"] = {
                         upload: (file) => {
-                            //todo:  make this fucker do something
+                            const fileReader = new FileReader();
                             return new Promise((resolve, reject) => {
-                                const response = window.fetch(imageServerUploadUrl,
-                                    {
-                                        method: 'POST',
-                                        headers: {
-                                        },
-                                        body: file
-                                    });
+                                fileReader.addEventListener(
+                                    "load",
+                                    () => {
+                                        let base64ImageSrc = fileReader.result;
+                                        setTimeout(() => {
+                                            const formData = new FormData();
+                                            formData.append('imageFile', file);
+                                            window.fetch(imageServerUploadUrl,
+                                                    {
+                                                        method: 'POST',
+                                                        headers: {
+                                                           // "Content-Type": "multipart/form-data"
+                                                        },
+                                                        body: formData
+                                                })
+                                                .then(response => {
+                                                    if (response.status === 200) {
+                                                        const data = response.text();
+                                                        resolve(data);
+                                                    }
+                                                });
+                                        }, 1500);
+                                    },
+                                    false
+                                );
 
-                                if (response.status === 200) {
-                                    const data = response.text();
-                                    resolve(data);
+                                if (file) {
+                                    fileReader.readAsArrayBuffer(file);
+                                } else {
+                                    reject("No file selected");
                                 }
                             });
                         }
