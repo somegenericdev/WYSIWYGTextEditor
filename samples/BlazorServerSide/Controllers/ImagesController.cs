@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BlazorServerSide.Controllers
 {
+    /// <summary>
+    /// An example API Controller for dealing with the files coming into a Blazor server app
+    /// </summary>
     [Route("images")]
     [ApiController]
     public class ImagesController : ControllerBase
@@ -50,13 +53,6 @@ namespace BlazorServerSide.Controllers
         private bool FileIsValidImageFormat(IFormFile imageFile)
         {
             return true;
-        }
-
-
-        // DELETE api/<ImageUploadController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
         }
     }
 }
