@@ -231,20 +231,26 @@
                                         setTimeout(() => {
                                             const formData = new FormData();
                                             formData.append('imageFile', file);
-                                            window.fetch(imageServerUploadUrl,
-                                                    {
-                                                        method: 'POST',
-                                                        headers: {
-                                                           // "Content-Type": "multipart/form-data"
-                                                        },
-                                                        body: formData
-                                                })
-                                                .then(response => {
-                                                    if (response.status === 200) {
-                                                        const data = response.text();
-                                                        resolve(data);
-                                                    }
+
+                                            window.dotNetHelper.invokeMethodAsync('SaveImage', base64ImageSrc)
+                                                .then(result => {
+                                                    resolve(result);
                                                 });
+
+                                            //window.fetch(imageServerUploadUrl,
+                                            //        {
+                                            //            method: 'POST',
+                                            //            headers: {
+                                            //               // "Content-Type": "multipart/form-data"
+                                            //            },
+                                            //            body: formData
+                                            //    })
+                                            //    .then(response => {
+                                            //        if (response.status === 200) {
+                                            //            const data = response.text();
+                                            //            resolve(data);
+                                            //        }
+                                            //    });
                                         }, 1500);
                                     },
                                     false
