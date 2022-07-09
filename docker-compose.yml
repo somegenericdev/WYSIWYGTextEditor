@@ -13,3 +13,9 @@ services:
       context: .
       dockerfile: samples/BlazorServerSide/Dockerfile
 
+  blazor-wasm:
+    image: ${DOCKER_REGISTRY-}blazorwasm
+    build:
+      context: .
+      dockerfile: samples/BlazorWasm/Dockerfile
+
