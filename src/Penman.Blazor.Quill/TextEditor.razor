@@ -1,8 +1,10 @@
 ﻿@using Penman.Blazor.Quill.Internal
 @using System
 @using System.IO
+@using Microsoft.AspNetCore.Components.Forms
 
 @inject IJSRuntime JsRuntime
+@implements IDisposable
 
 @namespace Penman.Blazor.Quill
 <div id="@_editorContainerId">
@@ -52,14 +54,21 @@
     public bool ImageServerUploadEnabled { get; set; } = false;
 
     [Parameter]
+    public ImageServerUploadType ImageServerUploadType { get; set; } = ImageServerUploadType.ApiPost;
+
+    [Parameter]
     public string ImageServerUploadUrl { get; set; }
 
     [Parameter]
-    public Func<FileStream, string> ImageServerUploadMethod { get; set; }
+    public Func<string, string, byte[], Task<string>> ImageServerUploadMethod { get; set; }
 
     [Parameter]
     public string DebugLevel { get; set; }
         = "info";
+
+    #nullable enable
+    private DotNetObjectReference<TextEditor>? _objRef;
+    #nullable disable
 
     private ElementReference _quillElement;
     private ElementReference _toolBar;
@@ -72,25 +81,35 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        if (ImageServerUploadEnabled && string.IsNullOrEmpty(ImageServerUploadUrl))
+        if (ImageServerUploadEnabled)
         {
-            throw new ArgumentNullException($"You cannot set the ImageServerUploadEnabled parameter without providing the ImageServerUploadUrl parameter.");
-        }
-    }
+            switch (ImageServerUploadType)
+            {
+                case ImageServerUploadType.ApiPost:
+                    if (string.IsNullOrEmpty(ImageServerUploadUrl))
+                    {
+                        throw new ArgumentNullException($"You cannot set the ImageServerUploadEnabled with ImageServerUploadType of ImageServerUploadType.ApiPost without providing the ImageServerUploadUrl parameter.");
+                    }
+                    break;
 
-    [JSInvokable]
-    public string SaveImage(IFormFile imageFile)
-    {
-        return ImageServerUploadMethod(fs);
+                case ImageServerUploadType.BlazorMethod:
+                    if (ImageServerUploadMethod == null)
+                    {
+                        throw new ArgumentNullException($"You cannot set the ImageServerUploadEnabled with ImageServerUploadType of ImageServerUploadType.BlazorMethod without providing an implementation of the ImageServerUploadMethod Function");
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
     }
 
     protected override async Task
         OnAfterRenderAsync(bool firstRender)
     {
+        await BundleAndSendDotNetHelper();
         if (firstRender)
         {
-
-
             await Interop.CreateQuill(
                 JsRuntime,
                 _quillElement,
@@ -101,11 +120,31 @@
                 DebugLevel,
                 _editorContainerId,
                 ImageServerUploadEnabled,
+                ImageServerUploadType,
                 ImageServerUploadUrl,
                 Fonts);
         }
 
         await ScrollEventHandler();
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    
+
+    public async Task BundleAndSendDotNetHelper()
+    {
+        _objRef = DotNetObjectReference.Create(this);
+        if (JsRuntime != null)
+        {
+            await JsRuntime.InvokeAsync<string>("setQuillImageUploadHelper", _objRef);
+        }
+    }
+
+    [JSInvokable]
+    public async Task<string> SaveImage(string imageName, string fileType, byte[] imageData)
+    {
+        return ImageServerUploadMethod == null ? "" 
+            : await ImageServerUploadMethod(imageName, fileType, imageData);
     }
 
     private async Task ScrollEventHandler()
@@ -187,5 +226,10 @@
     }
 
     private string _editorContainerId = "ql-editor-container";
+
+    public void Dispose()
+    {
+        _objRef?.Dispose();
+    }
 }
 

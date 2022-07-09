@@ -17,6 +17,7 @@ namespace Penman.Blazor.Quill
             string debugLevel,
             string scrollingContainerId,
             bool imageServerUploadEnabled,
+            ImageServerUploadType imageServerUploadType,
             string imageServerUploadUrl,
             List<string> customFonts = null)
         {
@@ -30,6 +31,7 @@ namespace Penman.Blazor.Quill
                 debugLevel,
                 scrollingContainerId,
                 imageServerUploadEnabled,
+                imageServerUploadType.ToString(),
                 imageServerUploadUrl,
                 customFonts);
         }

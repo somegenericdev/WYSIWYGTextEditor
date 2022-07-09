@@ -199,6 +199,10 @@
         }
         window.ImageUploader = ImageUploader;
 
+        window.setQuillImageUploadHelper = function(quillImageUploadHandler) {
+            window.quillImageUploadHandler = quillImageUploadHandler;
+        }
+
         window.QuillFunctions = {        
             createQuill: function (
                 quillElement,
@@ -209,6 +213,7 @@
                 debugLevel,
                 editorContainerId,
                 imageServerUploadEnabled,
+                imageServerUploadType,
                 imageServerUploadUrl,
                 customFonts) {
 
@@ -227,30 +232,36 @@
                                 fileReader.addEventListener(
                                     "load",
                                     () => {
-                                        let base64ImageSrc = fileReader.result;
+                                        let base64ImageSrc = new Uint8Array(fileReader.result);
                                         setTimeout(() => {
                                             const formData = new FormData();
                                             formData.append('imageFile', file);
+                                            switch (imageServerUploadType) {
+                                                case "BlazorMethod":
+                                                    window.quillImageUploadHandler.invokeMethodAsync('SaveImage',
+                                                            file.name,
+                                                            file.type,
+                                                            base64ImageSrc)
+                                                        .then(result => {
+                                                            resolve(result);
+                                                        });
+                                                break;
+                                                default:
+                                                    window.fetch(imageServerUploadUrl,
+                                                            {
+                                                                method: 'POST',
+                                                                headers: {
+                                                                },
+                                                                body: formData
+                                                            })
+                                                        .then(response => {
+                                                            if (response.status === 200) {
+                                                                const data = response.text();
+                                                                resolve(data);
+                                                            }
+                                                        });
+                                            }
 
-                                            window.dotNetHelper.invokeMethodAsync('SaveImage', base64ImageSrc)
-                                                .then(result => {
-                                                    resolve(result);
-                                                });
-
-                                            //window.fetch(imageServerUploadUrl,
-                                            //        {
-                                            //            method: 'POST',
-                                            //            headers: {
-                                            //               // "Content-Type": "multipart/form-data"
-                                            //            },
-                                            //            body: formData
-                                            //    })
-                                            //    .then(response => {
-                                            //        if (response.status === 200) {
-                                            //            const data = response.text();
-                                            //            resolve(data);
-                                            //        }
-                                            //    });
                                         }, 1500);
                                     },
                                     false
