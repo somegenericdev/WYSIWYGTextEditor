@@ -19,9 +19,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Penman.Blazor.Quill", "src\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorWasm", "samples\BlazorWasm\BlazorWasm.csproj", "{536D1DAF-91A2-489C-8540-0EA204AFEE64}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleImageApi", "samples\SampleImageApi\SampleImageApi.csproj", "{15248367-018F-4685-9B15-C25317B0FCEC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleImageApi", "samples\SampleImageApi\SampleImageApi.csproj", "{15248367-018F-4685-9B15-C25317B0FCEC}"
 EndProject
-Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{EAC53F4E-71CF-480B-82DB-4920FA95B052}"
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "samples\docker-compose.dcproj", "{EAC53F4E-71CF-480B-82DB-4920FA95B052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +57,7 @@ Global
 		{AEA7320C-E669-4009-B877-20E49D1D1687} = {666C8D8F-0108-4D22-9FA8-E1C65E42B1E2}
 		{536D1DAF-91A2-489C-8540-0EA204AFEE64} = {666C8D8F-0108-4D22-9FA8-E1C65E42B1E2}
 		{15248367-018F-4685-9B15-C25317B0FCEC} = {666C8D8F-0108-4D22-9FA8-E1C65E42B1E2}
+		{EAC53F4E-71CF-480B-82DB-4920FA95B052} = {666C8D8F-0108-4D22-9FA8-E1C65E42B1E2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9F1B7D95-9415-4F7A-849C-FBF83101BECF}
