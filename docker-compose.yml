@@ -5,11 +5,11 @@ services:
     image: ${DOCKER_REGISTRY-}sampleimageapi
     build:
       context: .
-      dockerfile: SampleImageApi/Dockerfile
+      dockerfile: samples/SampleImageApi/Dockerfile
 
   blazor-serverside:
     image: ${DOCKER_REGISTRY-}blazorserverside
     build:
       context: .
-      dockerfile: BlazorServerSide/Dockerfile
+      dockerfile: samples/BlazorServerSide/Dockerfile
 
