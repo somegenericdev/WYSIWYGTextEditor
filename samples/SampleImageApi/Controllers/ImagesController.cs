@@ -12,10 +12,12 @@ namespace SampleImageApi.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly IHttpContextAccessor _context;
+        private readonly ILogger _logger;
 
-        public ImagesController(IHttpContextAccessor context)
+        public ImagesController(IHttpContextAccessor context, ILogger<ImagesController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         [HttpGet("")]
@@ -40,6 +42,7 @@ namespace SampleImageApi.Controllers
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> PostAsync(IFormFile imageFile)
         {
+            _logger.LogInformation($"Inbound image file: {imageFile.FileName}, Content-Type: {imageFile.ContentType}");
             if (FileIsValidImageFormat(imageFile))
             {
                 await SaveFileAsync(imageFile);
@@ -57,6 +60,9 @@ namespace SampleImageApi.Controllers
         private async Task SaveFileAsync(IFormFile imageFile)
         {
             var imagePath = Path.Combine(System.IO.Directory.GetCurrentDirectory(), "wwwroot", "img", imageFile.FileName);
+
+            _logger.LogInformation($"Writing image file: {imageFile.FileName} to {imagePath}");
+
             var createdFile = System.IO.File.Create(imagePath);
             await imageFile.CopyToAsync(createdFile);
             createdFile.Close();
