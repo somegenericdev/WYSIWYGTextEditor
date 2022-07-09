@@ -60,7 +60,7 @@
     public string ImageServerUploadUrl { get; set; }
 
     [Parameter]
-    public Func<string, string, byte[], Task<string>> ImageServerUploadMethod { get; set; }
+    public Func<string, string, Stream, Task<string>> ImageServerUploadMethod { get; set; }
 
     [Parameter]
     public string DebugLevel { get; set; }
@@ -141,10 +141,15 @@
     }
 
     [JSInvokable]
-    public async Task<string> SaveImage(string imageName, string fileType, byte[] imageData)
+    public async Task<string> SaveImage(string imageName, string fileType)
     {
+        var dataReference = 
+            await JsRuntime.InvokeAsync<IJSStreamReference>("quillImageDataStream");
+        await using var dataReferenceStream = 
+            await dataReference.OpenReadStreamAsync(maxAllowedSize: 10_000_000);
+
         return ImageServerUploadMethod == null ? "" 
-            : await ImageServerUploadMethod(imageName, fileType, imageData);
+            : await ImageServerUploadMethod(imageName, fileType, dataReferenceStream);
     }
 
     private async Task ScrollEventHandler()

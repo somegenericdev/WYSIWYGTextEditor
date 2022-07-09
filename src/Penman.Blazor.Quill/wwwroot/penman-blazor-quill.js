@@ -232,16 +232,18 @@
                                 fileReader.addEventListener(
                                     "load",
                                     () => {
-                                        let base64ImageSrc = new Uint8Array(fileReader.result);
+                                        const base64ImageSrc = new Uint8Array(fileReader.result);
                                         setTimeout(() => {
                                             const formData = new FormData();
                                             formData.append('imageFile', file);
                                             switch (imageServerUploadType) {
                                                 case "BlazorMethod":
+                                                    window.quillImageDataStream = function() {
+                                                        return base64ImageSrc;
+                                                    };
                                                     window.quillImageUploadHandler.invokeMethodAsync('SaveImage',
                                                             file.name,
-                                                            file.type,
-                                                            base64ImageSrc)
+                                                            file.type)
                                                         .then(result => {
                                                             resolve(result);
                                                         });

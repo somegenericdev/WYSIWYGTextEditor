@@ -1,4 +1,5 @@
 ﻿@page "/image-upload-blazor"
+@using System.IO
 @inject IHttpClientFactory HttpClientFactory;
 @inject NavigationManager Navigator
 <div class="standardEditor">
@@ -92,7 +93,7 @@
         StateHasChanged();
     }
 
-    private async Task<string> UploadImageToBlazor(string imageName, string imageContentType, byte[] imageData)
+    public async Task<string> UploadImageToBlazor(string imageName, string imageContentType, Stream imageData)
     {
         if (IsAcceptedContentTypes(imageContentType))
         {
@@ -100,7 +101,10 @@
             httpClient.BaseAddress = new Uri("http://image-api/");
             using var content = new MultipartFormDataContent();
 
-            var byteArrayContent = new ByteArrayContent(imageData);
+            var memoryStream = new MemoryStream();
+            await imageData.CopyToAsync(memoryStream);
+
+            var byteArrayContent = new ByteArrayContent(memoryStream.ToArray());
             byteArrayContent.Headers.Add("Content-Type", imageContentType);
 
             content.Add(byteArrayContent, "imageFile", imageName);

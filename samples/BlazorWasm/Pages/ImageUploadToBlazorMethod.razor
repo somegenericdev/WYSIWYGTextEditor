@@ -92,14 +92,17 @@
         StateHasChanged();
     }
 
-    private async Task<string> UploadImageToBlazor(string imageName, string imageContentType, byte[] imageData)
+    private async Task<string> UploadImageToBlazor(string imageName, string imageContentType, Stream imageData)
     {
         if (IsAcceptedContentTypes(imageContentType))
         {
             HttpClient.BaseAddress = new Uri("http://localhost:54111");
             using var content = new MultipartFormDataContent();
 
-            var byteArrayContent = new ByteArrayContent(imageData);
+            var memoryStream = new MemoryStream();
+            await imageData.CopyToAsync(memoryStream);
+
+            var byteArrayContent = new ByteArrayContent(memoryStream.ToArray());
             byteArrayContent.Headers.Add("Content-Type", imageContentType);
 
             content.Add(byteArrayContent, "imageFile", imageName);
