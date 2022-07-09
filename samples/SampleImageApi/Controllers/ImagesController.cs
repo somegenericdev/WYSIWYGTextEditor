@@ -1,18 +1,30 @@
-﻿using System.IO;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Collections;
+using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
-namespace BlazorServerSide.Controllers
+namespace SampleImageApi.Controllers
 {
     /// <summary>
-    /// An example API Controller for dealing with the files coming into a Blazor server app
+    /// An example API Controller for dealing with the quill image files coming into a Blazor app
     /// </summary>
     [Route("images")]
     [ApiController]
     public class ImagesController : ControllerBase
     {
-        // GET api/<ImageUploadController>/5
+        private readonly IHttpContextAccessor _context;
+
+        public ImagesController(IHttpContextAccessor context)
+        {
+            _context = context;
+        }
+
+        [HttpGet("")]
+        public async Task<IActionResult> Get()
+        {
+            return Ok("test");
+        }
+
+
         [HttpGet("{imageName}")]
         public async Task<IActionResult> Get(string imageName)
         {
@@ -25,7 +37,6 @@ namespace BlazorServerSide.Controllers
             return File(stream, "application/octet-stream");
         }
 
-        // POST api/<ImageUploadController>
         [HttpPost, DisableRequestSizeLimit]
         public async Task<IActionResult> PostAsync(IFormFile imageFile)
         {
@@ -38,7 +49,9 @@ namespace BlazorServerSide.Controllers
                 return BadRequest(new { message = "Invalid file extension" });
             }
 
-            return Ok($"/images/{imageFile.FileName}");
+            var request = _context.HttpContext?.Request;
+            var appBaseUrl = $"http://localhost:54111";
+            return Ok($"{appBaseUrl}/images/{imageFile.FileName}");
         }
 
         private async Task SaveFileAsync(IFormFile imageFile)
@@ -52,7 +65,9 @@ namespace BlazorServerSide.Controllers
 
         private bool FileIsValidImageFormat(IFormFile imageFile)
         {
-            return true;
+            var acceptedImageTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/svg+xml", "image/webp" };
+
+            return ((IList)acceptedImageTypes).Contains(imageFile.ContentType);
         }
     }
 }

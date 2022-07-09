@@ -1,36 +1,38 @@
-﻿@page "/image-upload-server"
+﻿@page "/image-upload-blazor"
+@inject HttpClient HttpClient;
+@inject NavigationManager Navigator
 <div class="standardEditor">
-    
-    <h3>Penman.Blazor.Quill can upload Quill images to your server or API</h3>  
+    <h3>Penman.Blazor.Quill can upload Quill images to your Blazor code</h3>  
     
     Quill natively uploads images as base64-encoded images inline in your
     html document.
     <p>
-        Instead, you may wish to have the images attached to quill to upload to your
-        API or server by passing the text editor an ImageServerUploadUrl to a given server or API which can handle 
-        a POST of IFormFile imageFile.
+        Instead, you may wish to have the images attached to quill to be sent to your
+        blazor code by creating a method tied to the ImageServerUploadMethod parameter.
     </p>
     <p>
         <pre>
             <code>
                 &lt;TextEditor 
                 ImageServerUploadEnabled="true"
-                ImageServerUploadType="ImageServerUploadType.ApiPost"
-                ImageServerUploadUrl="/images"&gt;
-                ...other guff
+                ImageServerUploadType="ImageServerUploadType.BlazorMethod"
+                ImageServerUploadMethod="UploadImageToBlazor"&gt;
+                ...other mishegas
                 &lt;/TextEditor&gt;
             </code>
         </pre>
     </p>
+
     <p>
-    Contrariwise, you might want to process the image in your Blazor code.  You can try <a href="/image-upload-blazor">Upload a quill image to your Blazor code</a>.
+    Contrariwise, you might want to process the image on a file server with a POST of IFormFile imageFile.  You can try <a href="/image-upload-server">Upload a quill image to a web server or API</a>.
     </p>
 
     <h3>Example Editor</h3>
 <TextEditor @ref="@_quillHtml" StickyToolBar="true"
             ImageServerUploadEnabled="true" 
-            ImageServerUploadType="ImageServerUploadType.ApiPost" 
-            ImageServerUploadUrl="http://localhost:54111/images">
+            ImageServerUploadType="ImageServerUploadType.BlazorMethod" 
+            ImageServerUploadMethod="UploadImageToBlazor"
+            >
         <ToolbarContent>
             <select class="ql-header">
                 <option selected=""></option>
@@ -63,23 +65,21 @@
 
         </ToolbarContent>
         <EditorContent>
-            <h4>Upload an image (WebApi Url)</h4>
-            Upload a quill-inserted image to a web api endpoint
+            <h4>Upload a quill image (blazor code)</h4>
+                Upload a quill-inserted image to your blazor code
         </EditorContent>
     </TextEditor>
 </div>
 
 @code {
     TextEditor _quillHtml;
-    
 
-    string _quillHtmlContent;
     string _quillContent;
 
 
     public async void GetHtml()
     {
-        _quillHtmlContent = await this._quillHtml.GetHtml();
+        await this._quillHtml.GetHtml();
         StateHasChanged();
     }
 
@@ -91,4 +91,33 @@
         await this._quillHtml.LoadHtmlContent(QuillContent);
         StateHasChanged();
     }
+
+    private async Task<string> UploadImageToBlazor(string imageName, string imageContentType, byte[] imageData)
+    {
+        if (IsAcceptedContentTypes(imageContentType))
+        {
+            HttpClient.BaseAddress = new Uri("http://localhost:54111");
+            using var content = new MultipartFormDataContent();
+
+            var byteArrayContent = new ByteArrayContent(imageData);
+            byteArrayContent.Headers.Add("Content-Type", imageContentType);
+
+            content.Add(byteArrayContent, "imageFile", imageName);
+
+            var url = "images";
+            var result = await HttpClient.PostAsync(url, content);
+
+            //API returns the path to the saved image
+            return await result.Content.ReadAsStringAsync();
+        }
+        return String.Empty;
+    }
+
+    private bool IsAcceptedContentTypes(string imageContentType)
+    {
+        var acceptedImageTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/svg+xml", "image/webp" };
+
+        return acceptedImageTypes.Contains(imageContentType);
+    }
+
 }
