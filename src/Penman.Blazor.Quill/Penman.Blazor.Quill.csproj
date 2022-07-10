@@ -6,7 +6,7 @@
     <RootNamespace>Penman.Blazor.Quill</RootNamespace>
 
     <PackageId>Penman.Blazor.Quill</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.2.0</Version>
     <Authors>domingoladron, Chris Laine</Authors>
     <Description>Penman.Blazor.Quill Rich text editor for Blazor applications, forked from WYSIWYGTextEditor</Description>
     <Copyright>Copyright 2022 (c) Chris Laine. All rights reserved.</Copyright>
@@ -16,7 +16,7 @@
 	  <RepositoryUrl>https://github.com/domingoladron/Penman.Blazor.Quill</RepositoryUrl>
     <PackageTags>Blazor Rich Text Editor Quill QuillJS WYSIWYG Blazored Razor Components</PackageTags>
     <Company />
-    <PackageReleaseNotes>Adding autogrowing functionality</PackageReleaseNotes>
+    <PackageReleaseNotes>Adding Server-uploaded image functionality</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
