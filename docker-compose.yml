@@ -1,0 +1,21 @@
+version: '3.4'
+
+services:
+  image-api:
+    image: ${DOCKER_REGISTRY-}sampleimageapi
+    build:
+      context: .
+      dockerfile: samples/SampleImageApi/Dockerfile
+
+  blazor-serverside:
+    image: ${DOCKER_REGISTRY-}blazorserverside
+    build:
+      context: .
+      dockerfile: samples/BlazorServerSide/Dockerfile
+
+  blazor-wasm:
+    image: ${DOCKER_REGISTRY-}blazorwasm
+    build:
+      context: .
+      dockerfile: samples/BlazorWasm/Dockerfile
+

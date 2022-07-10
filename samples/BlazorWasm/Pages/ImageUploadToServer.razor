@@ -1,0 +1,94 @@
+﻿@page "/image-upload-server"
+<div class="standardEditor">
+    
+    <h3>Penman.Blazor.Quill can upload Quill images to your server or API</h3>  
+    
+    Quill natively uploads images as base64-encoded images inline in your
+    html document.
+    <p>
+        Instead, you may wish to have the images attached to quill to upload to your
+        API or server by passing the text editor an ImageServerUploadUrl to a given server or API which can handle 
+        a POST of IFormFile imageFile.
+    </p>
+    <p>
+        <pre>
+            <code>
+                &lt;TextEditor 
+                ImageServerUploadEnabled="true"
+                ImageServerUploadType="ImageServerUploadType.ApiPost"
+                ImageServerUploadUrl="/images"&gt;
+                ...other guff
+                &lt;/TextEditor&gt;
+            </code>
+        </pre>
+    </p>
+    <p>
+    Contrariwise, you might want to process the image in your Blazor code.  You can try <a href="/image-upload-blazor">Upload a quill image to your Blazor code</a>.
+    </p>
+
+    <h3>Example Editor</h3>
+<TextEditor @ref="@_quillHtml" StickyToolBar="true"
+            ImageServerUploadEnabled="true" 
+            ImageServerUploadType="ImageServerUploadType.ApiPost" 
+            ImageServerUploadUrl="http://localhost:54111/images">
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-image"></button>
+            </span>
+
+        </ToolbarContent>
+        <EditorContent>
+            <h4>Upload an image (WebApi Url)</h4>
+            Upload a quill-inserted image to a web api endpoint
+        </EditorContent>
+    </TextEditor>
+</div>
+
+@code {
+    TextEditor _quillHtml;
+    
+
+    string _quillHtmlContent;
+    string _quillContent;
+
+
+    public async void GetHtml()
+    {
+        _quillHtmlContent = await this._quillHtml.GetHtml();
+        StateHasChanged();
+    }
+
+    public async void SetHtml()
+    {
+        string QuillContent =
+            @"Upload an image to a web api endpoint";
+
+        await this._quillHtml.LoadHtmlContent(QuillContent);
+        StateHasChanged();
+    }
+}

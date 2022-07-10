@@ -1,0 +1,33 @@
+version: '3.4'
+
+services:
+  image-api:
+    container_name: image-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 54111:80
+
+  blazor-serverside:
+    container_name: blazor-serverside
+    depends_on: 
+      - image-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 54112:80
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  blazor-wasm:
+    container_name: blazor-wasm
+    depends_on: 
+      - image-api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+    ports:
+      - 54113:80
+    

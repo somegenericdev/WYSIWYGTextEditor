@@ -230,9 +230,9 @@ and the editor will automatically fill to the size you've specified.
     }
 ```
 
-## Advanced functionality
+# Advanced functionality
 
-### Sticky Snow Toolbar
+## Sticky Snow Toolbar
 
 On longer documents, it becomes tedious and unusable to have the snow toolbar lodged up the top, so instead you can configure the snow editor to have the toolbar follow along as you edit.  Simply pass the EditorTheme.Snow for the Theme and StickyToolBar="true"
 > Note: The bubble editor is not impacted by this at all
@@ -244,3 +244,66 @@ On longer documents, it becomes tedious and unusable to have the snow toolbar lo
             ...
 
 ```
+
+## Quill Server-Uploaded Images
+
+Quill natively uploads images as 64bit encoded embedded images. This is fine in most situations, but for some scenarios, having the image file uploaded like this is unacceptable.
+
+You might want to upload the image to a separate server or API, or even process the file inside your Blazor page.  Quill Server-Uploaded Images support the image upload button and drag-and-drop image uploads.
+
+Penman.Blazor.Quill supports two modes for handling server-side image processing.
+
+* **ImageServerUploadType.ApiPost** Have javascript perform a fetch POST of the image data to a given url.
+* **ImageServerUploadType.BlazorMethod** Have javascript send the image data to a delegated Function inside your Blazor page so you can process it yourself.
+
+### ImageServerUploadType.ApiPost
+
+You can configure API Posting by setting up the TextEditor like this:
+
+```cs
+<TextEditor @ref="@_quillHtml"
+            ImageServerUploadEnabled="true" 
+            ImageServerUploadType="ImageServerUploadType.ApiPost" 
+            ImageServerUploadUrl="http://some-url-to-post-image">
+</TextEditor>
+
+```
+
+A fetch POST will be called, passing the image as formData attached to the 'imageFile' parameter
+```javascript
+const formData = new FormData();
+.append('imageFile', file);
+```
+
+It's expected that the configured ```ImageServerUploadUrl``` will -- afer processing the image -- return a URL (string) of the image's saved location so Penman.Blazor.Quill can display this in the TextEditor.
+
+> Note:  For security reasons, Penman.Blazor.Quill passes no http headers of any kind, so if your ```ImageServerUploadUrl``` requires such headers, it's recommended that you use a proxy server to receive such a request and add the required headers from the POST before passing it along to the actual image processing server.
+
+### ImageServerUploadType.BlazorMethod
+You can configure Blazor method uploading in your page by configuring your TextEditor as so:
+
+```cs
+<TextEditor @ref="@_quillHtml"
+            ImageServerUploadEnabled="true" 
+            ImageServerUploadType="ImageServerUploadType.BlazorMethod" 
+            ImageServerUploadMethod="UploadImageToBlazor"
+            >
+</TextEditor>
+
+```
+
+Where ```UploadImageToBlazor``` is a Func delegate of type ```Func<string, string, Stream, Task<string>> ```
+
+#### Example
+
+````cs
+
+private async Task<string> UploadImageToBlazor(string imageName, string imageContentType, Stream imageData)
+    {
+        //process the image stream and return a string to its url on the interwebs
+    }
+
+````
+
+If you want to try out the server-uploaded functionality, have a look at the [samples](samples/README.md)
+

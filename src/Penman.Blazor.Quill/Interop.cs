@@ -16,6 +16,9 @@ namespace Penman.Blazor.Quill
             string theme,
             string debugLevel,
             string scrollingContainerId,
+            bool imageServerUploadEnabled,
+            ImageServerUploadType imageServerUploadType,
+            string imageServerUploadUrl,
             List<string> customFonts = null)
         {
             return jsRuntime.InvokeAsync<object>(
@@ -27,6 +30,9 @@ namespace Penman.Blazor.Quill
                 theme, 
                 debugLevel,
                 scrollingContainerId,
+                imageServerUploadEnabled,
+                imageServerUploadType.ToString(),
+                imageServerUploadUrl,
                 customFonts);
         }
 

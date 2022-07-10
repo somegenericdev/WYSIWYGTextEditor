@@ -1,0 +1,128 @@
+﻿@page "/image-upload-blazor"
+@using System.IO
+@inject IHttpClientFactory HttpClientFactory;
+@inject NavigationManager Navigator
+<div class="standardEditor">
+    <h3>Penman.Blazor.Quill can upload Quill images to your Blazor code</h3>  
+    
+    Quill natively uploads images as base64-encoded images inline in your
+    html document.
+    <p>
+        Instead, you may wish to have the images attached to quill to be sent to your
+        blazor code by creating a method tied to the ImageServerUploadMethod parameter.
+    </p>
+    <p>
+        <pre>
+            <code>
+                &lt;TextEditor 
+                ImageServerUploadEnabled="true"
+                ImageServerUploadType="ImageServerUploadType.BlazorMethod"
+                ImageServerUploadMethod="UploadImageToBlazor"&gt;
+                ...other mishegas
+                &lt;/TextEditor&gt;
+            </code>
+        </pre>
+    </p>
+
+    <p>
+    Contrariwise, you might want to process the image on a file server with a POST of IFormFile imageFile.  You can try <a href="/image-upload-server">Upload a quill image to a web server or API</a>.
+    </p>
+
+    <h3>Example Editor</h3>
+<TextEditor @ref="@_quillHtml" StickyToolBar="true"
+            ImageServerUploadEnabled="true" 
+            ImageServerUploadType="ImageServerUploadType.BlazorMethod" 
+            ImageServerUploadMethod="UploadImageToBlazor"
+            >
+        <ToolbarContent>
+            <select class="ql-header">
+                <option selected=""></option>
+                <option value="1"></option>
+                <option value="2"></option>
+                <option value="3"></option>
+                <option value="4"></option>
+                <option value="5"></option>
+            </select>
+            <span class="ql-formats">
+                <button class="ql-bold"></button>
+                <button class="ql-italic"></button>
+                <button class="ql-underline"></button>
+                <button class="ql-strike"></button>
+            </span>
+            <span class="ql-formats">
+                <select class="ql-color"></select>
+                <select class="ql-background"></select>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-list" value="ordered"></button>
+                <button class="ql-list" value="bullet"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-link"></button>
+            </span>
+            <span class="ql-formats">
+                <button class="ql-image"></button>
+            </span>
+
+        </ToolbarContent>
+        <EditorContent>
+            <h4>Upload a quill image (blazor code)</h4>
+                Upload a quill-inserted image to your blazor code
+        </EditorContent>
+    </TextEditor>
+</div>
+
+@code {
+    TextEditor _quillHtml;
+
+    string _quillContent;
+
+
+    public async void GetHtml()
+    {
+        await this._quillHtml.GetHtml();
+        StateHasChanged();
+    }
+
+    public async void SetHtml()
+    {
+        string QuillContent =
+            @"Upload an image to a web api endpoint";
+
+        await this._quillHtml.LoadHtmlContent(QuillContent);
+        StateHasChanged();
+    }
+
+    public async Task<string> UploadImageToBlazor(string imageName, string imageContentType, Stream imageData)
+    {
+        if (IsAcceptedContentTypes(imageContentType))
+        {
+            using var httpClient = HttpClientFactory.CreateClient();
+            httpClient.BaseAddress = new Uri("http://image-api/");
+            using var content = new MultipartFormDataContent();
+
+            var memoryStream = new MemoryStream();
+            await imageData.CopyToAsync(memoryStream);
+
+            var byteArrayContent = new ByteArrayContent(memoryStream.ToArray());
+            byteArrayContent.Headers.Add("Content-Type", imageContentType);
+
+            content.Add(byteArrayContent, "imageFile", imageName);
+
+            var url = "images";
+            var result = await httpClient.PostAsync(url, content);
+
+            //API returns the path to the saved image
+            return await result.Content.ReadAsStringAsync();
+        }
+        return null;
+    }
+
+    private bool IsAcceptedContentTypes(string imageContentType)
+    {
+        var acceptedImageTypes = new[] { "image/jpeg", "image/png", "image/gif", "image/svg+xml", "image/webp" };
+
+        return acceptedImageTypes.Contains(imageContentType);
+    }
+
+}
