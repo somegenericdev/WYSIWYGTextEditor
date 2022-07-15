@@ -1,7 +1,7 @@
 import Quill from "quill";
 const InlineBlot = Quill.import("blots/block");
 
-class LoadingImage extends InlineBlot {
+export class LoadingImage extends InlineBlot {
     static create(src) {
         const node = super.create(src);
         if (src === true) return node;
@@ -25,5 +25,3 @@ LoadingImage.blotName = "imageBlot";
 LoadingImage.className = "image-uploading";
 LoadingImage.tagName = "span";
 Quill.register({ "formats/imageBlot": LoadingImage });
-
-export default LoadingImage;

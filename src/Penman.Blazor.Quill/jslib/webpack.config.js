@@ -9,12 +9,18 @@ module.exports = {
                 use: {
                     loader: "babel-loader"
                 }
+            },
+            {
+                test: /\.css$/i,
+                use: {
+                    loader: "css-loader"
+                }
             }
         ]
     },
     output: {
         path: path.resolve(__dirname, '../wwwroot/'),
-        filename: "my_lib.js",
-        library: "MyLib"
+        filename: "penman-blazor-quill.js",
+        library: "PenmanBlazorQuill"
     }
 };

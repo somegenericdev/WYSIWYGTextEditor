@@ -1,3 +1,5 @@
+import Quill from "quill";
+const LoadingImage = require('./blots/image');
 import ImageUploader from "./ImageUploader";
 
 window.setQuillImageUploadHelper = function(quillImageUploadHandler) {

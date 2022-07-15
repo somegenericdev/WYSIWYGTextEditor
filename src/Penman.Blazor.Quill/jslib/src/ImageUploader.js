@@ -1,4 +1,6 @@
-import {LoadingImage} from "./blots/image";
+const LoadingImage = require('./blots/image');
+import "./imageUploader.css";
+
 export default class ImageUploader {
     constructor(quill, options) {
         this.quill = quill;
