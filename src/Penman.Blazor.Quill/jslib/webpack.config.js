@@ -18,6 +18,7 @@ module.exports = {
             }
         ]
     },
+    devtool: 'eval-source-map',
     output: {
         path: path.resolve(__dirname, '../wwwroot/'),
         filename: "penman-blazor-quill.js",

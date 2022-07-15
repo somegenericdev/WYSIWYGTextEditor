@@ -1,10 +1,6 @@
 import Quill from "quill";
-const LoadingImage = require('./blots/image');
-import ImageUploader from "./ImageUploader";
+import { ImageUploader, LoadingImage } from "./ImageUploader";
 
-window.setQuillImageUploadHelper = function(quillImageUploadHandler) {
-    window.quillImageUploadHandler = quillImageUploadHandler;
-}
 window.QuillFunctions = {        
     createQuill: function (
         quillElement,
@@ -153,5 +149,9 @@ window.QuillFunctions = {
             }
         }
     }
+};
+
+window.setQuillImageUploadHelper = function(quillImageUploadHandler) {
+    window.quillImageUploadHandler = quillImageUploadHandler;
 };
 
