@@ -6,7 +6,7 @@
     <RootNamespace>Penman.Blazor.Quill</RootNamespace>
 
     <PackageId>Penman.Blazor.Quill</PackageId>
-    <Version>1.2.0</Version>
+    <Version>1.3.0</Version>
     <Authors>domingoladron, Chris Laine</Authors>
     <Description>Penman.Blazor.Quill Rich text editor for Blazor applications, forked from WYSIWYGTextEditor</Description>
     <Copyright>Copyright 2022 (c) Chris Laine. All rights reserved.</Copyright>
@@ -16,7 +16,27 @@
 	  <RepositoryUrl>https://github.com/domingoladron/Penman.Blazor.Quill</RepositoryUrl>
     <PackageTags>Blazor Rich Text Editor Quill QuillJS WYSIWYG Blazored Razor Components</PackageTags>
     <Company />
-    <PackageReleaseNotes>Adding Server-uploaded image functionality</PackageReleaseNotes>
+    <PackageReleaseNotes>
+        
+	    ## What's this change about?
+	    
+	    Sick of fighting with the separate quill.js load order issues, penman-blazor-quill.js
+		is now built and compiled via NPM and Webpack, including quilljs v1.3.7
+		There is no more need for the reference to
+		
+		&lt;script src="https://cdn.quilljs.com/1.3.6/quill.js"&gt;&lt;/script&gt;
+
+		This reference can now be removed from projects.
+
+
+		## What's changed?
+
+		* Added npm and webpack basics
+		* reworked js scripts into class modules and quill script references
+		* now compile penman-blazor-quill.js to optimised js file
+        * updated README accordingly
+
+	</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
