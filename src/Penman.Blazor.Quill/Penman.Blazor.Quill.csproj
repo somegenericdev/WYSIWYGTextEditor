@@ -50,4 +50,8 @@
     <None Include="wwwroot\penman-blazor-quill.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="jslib\" />
+  </ItemGroup>
+
 </Project>

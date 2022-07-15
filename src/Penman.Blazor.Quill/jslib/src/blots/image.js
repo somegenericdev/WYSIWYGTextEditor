@@ -1,5 +1,4 @@
 import Quill from "quill";
-
 const InlineBlot = Quill.import("blots/block");
 
 class LoadingImage extends InlineBlot {
