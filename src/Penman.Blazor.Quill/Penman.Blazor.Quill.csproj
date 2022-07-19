@@ -6,7 +6,7 @@
     <RootNamespace>Penman.Blazor.Quill</RootNamespace>
 
     <PackageId>Penman.Blazor.Quill</PackageId>
-    <Version>1.3.0</Version>
+    <Version>1.4.0</Version>
     <Authors>domingoladron, Chris Laine</Authors>
     <Description>Penman.Blazor.Quill Rich text editor for Blazor applications, forked from WYSIWYGTextEditor</Description>
     <Copyright>Copyright 2022 (c) Chris Laine. All rights reserved.</Copyright>
@@ -20,23 +20,15 @@
         
 	    ## What's this change about?
 	    
-	    Sick of fighting with the separate quill.js load order issues, penman-blazor-quill.js
-		is now built and compiled via NPM and Webpack, including quilljs v1.3.7
-		There is no more need for the reference to
-		
-		&lt;script src="https://cdn.quilljs.com/1.3.6/quill.js"&gt;&lt;/script&gt;
-
-		This reference can now be removed from projects.
+	    Moved the ordering in the TextEditor OnRenderAsync method as I was getting intermittent
+        failures on loading content if the order wasn't corrent.
 
 
 		## What's changed?
 
-		* Added npm and webpack basics
-		* reworked js scripts into class modules and quill script references
-		* now compile penman-blazor-quill.js to optimised js file
-        * updated README accordingly
+		* Reordered the sequence of the creation of the quill element to come first
 
-	</PackageReleaseNotes>
+    </PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
