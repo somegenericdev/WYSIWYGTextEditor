@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -6,7 +6,7 @@
     <RootNamespace>Penman.Blazor.Quill</RootNamespace>
 
     <PackageId>Penman.Blazor.Quill</PackageId>
-    <Version>1.4.0</Version>
+    <Version>1.4.5</Version>
     <Authors>domingoladron, Chris Laine</Authors>
     <Description>Penman.Blazor.Quill Rich text editor for Blazor applications, forked from WYSIWYGTextEditor</Description>
     <Copyright>Copyright 2022 (c) Chris Laine. All rights reserved.</Copyright>
@@ -16,21 +16,11 @@
 	  <RepositoryUrl>https://github.com/domingoladron/Penman.Blazor.Quill</RepositoryUrl>
     <PackageTags>Blazor Rich Text Editor Quill QuillJS WYSIWYG Blazored Razor Components</PackageTags>
     <Company />
-    <PackageReleaseNotes>
-        
-	    ## What's this change about?
-	    
-	    Moved the ordering in the TextEditor OnRenderAsync method as I was getting intermittent
-        failures on loading content if the order wasn't corrent.
-
-
-		## What's changed?
-
-		* Reordered the sequence of the creation of the quill element to come first
-
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>Fixed an ongoing issue with load order of the editor when image upload is enabled</PackageReleaseNotes>
     <PackageIcon>icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageVersion>1.4.5</PackageVersion>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
