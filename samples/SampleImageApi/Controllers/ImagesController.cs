@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Microsoft.AspNetCore.Hosting.Server;
 using Microsoft.AspNetCore.Mvc;
 
 namespace SampleImageApi.Controllers

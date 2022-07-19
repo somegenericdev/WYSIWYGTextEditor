@@ -107,7 +107,6 @@
     protected override async Task
         OnAfterRenderAsync(bool firstRender)
     {
-        await BundleAndSendDotNetHelper();
         if (firstRender)
         {
             await Interop.CreateQuill(
@@ -126,6 +125,8 @@
         }
 
         await ScrollEventHandler();
+        await BundleAndSendDotNetHelper();
+       
         await base.OnAfterRenderAsync(firstRender);
     }
 
