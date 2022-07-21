@@ -66,6 +66,10 @@
     public string DebugLevel { get; set; }
         = "info";
 
+    [Parameter]
+    public EventCallback OnTextChanged { get; set; }
+
+
     #nullable enable
     private DotNetObjectReference<TextEditor>? _objRef;
     #nullable disable
@@ -132,8 +136,14 @@
         _objRef = DotNetObjectReference.Create(this);
         if (JsRuntime != null)
         {
-            await JsRuntime.InvokeAsync<string>("setQuillImageUploadHelper", _objRef);
+            await JsRuntime.InvokeAsync<string>("setQuillBlazorBridge", _objRef);
         }
+    }
+
+    [JSInvokable]
+    public async Task FireTextChangedEvent()
+    {
+        await OnTextChanged.InvokeAsync();
     }
 
     [JSInvokable]

@@ -39,7 +39,7 @@ window.QuillFunctions = {
                                             window.quillImageDataStream = function() {
                                                 return base64ImageSrc;
                                             };
-                                            window.quillImageUploadHandler.invokeMethodAsync('SaveImage',
+                                            window.quillBlazorBridge.invokeMethodAsync('SaveImage',
                                                     file.name,
                                                     file.type)
                                                 .then(result => {
@@ -93,7 +93,15 @@ window.QuillFunctions = {
             Quill.register(fontAttributor, true);
 
         }
-        new Quill(quillElement, options);
+        let myQuill = new Quill(quillElement, options);
+
+        myQuill.on('text-change', function(delta, oldDelta, source) {
+            if(window.quillBlazorBridge != null) {
+                window.quillBlazorBridge.invokeMethodAsync('FireTextChangedEvent');
+            }
+        });
+
+        return myQuill;
     },
     getQuillContent: function(quillElement) {
         return JSON.stringify(quillElement.__quill.getContents());
@@ -105,7 +113,7 @@ window.QuillFunctions = {
         return quillElement.__quill.root.innerHTML;
     },
     loadQuillContent: function(quillElement, quillContent) {
-        content = JSON.parse(quillContent);
+        let content = JSON.parse(quillContent);
         return quillElement.__quill.setContents(content, 'api');
     },
     loadQuillHTMLContent: function (quillElement, quillHTMLContent) {
@@ -116,7 +124,7 @@ window.QuillFunctions = {
     },
     insertQuillImage: function (quillElement, imageURL) {
         var Delta = Quill.import('delta');
-        editorIndex = 0;
+        let editorIndex = 0;
 
         if (quillElement.__quill.getSelection() !== null) {
             editorIndex = quillElement.__quill.getSelection().index;
@@ -151,7 +159,7 @@ window.QuillFunctions = {
     }
 };
 
-window.setQuillImageUploadHelper = function(quillImageUploadHandler) {
-    window.quillImageUploadHandler = quillImageUploadHandler;
+window.setQuillBlazorBridge = function(quillBlazorBridge) {
+    window.quillBlazorBridge = quillBlazorBridge;
 };
 
