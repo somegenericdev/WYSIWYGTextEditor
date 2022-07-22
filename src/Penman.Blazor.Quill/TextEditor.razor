@@ -136,7 +136,7 @@
         _objRef = DotNetObjectReference.Create(this);
         if (JsRuntime != null)
         {
-            await JsRuntime.InvokeAsync<string>("setQuillBlazorBridge", _objRef);
+            await JsRuntime.InvokeAsync<string>("window.QuillFunctions.setQuillBlazorBridge", _objRef);
         }
     }
 

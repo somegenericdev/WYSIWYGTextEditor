@@ -22,7 +22,7 @@ namespace Penman.Blazor.Quill
             List<string> customFonts = null)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.createQuill", 
+                "window.QuillFunctions.createQuill", 
                 quillElement, 
                 toolbar, 
                 readOnly, 
@@ -41,7 +41,7 @@ namespace Penman.Blazor.Quill
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillText", 
+                "window.QuillFunctions.getQuillText", 
                 quillElement);
         }
 
@@ -50,7 +50,7 @@ namespace Penman.Blazor.Quill
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillHTML", 
+                "window.QuillFunctions.getQuillHTML", 
                 quillElement);
         }
 
@@ -59,7 +59,7 @@ namespace Penman.Blazor.Quill
             ElementReference quillElement)
         {
             return jsRuntime.InvokeAsync<string>(
-                "QuillFunctions.getQuillContent", 
+                "window.QuillFunctions.getQuillContent", 
                 quillElement);
         }
 
@@ -69,7 +69,7 @@ namespace Penman.Blazor.Quill
             string content)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.loadQuillContent", 
+                "window.QuillFunctions.loadQuillContent", 
                 quillElement, content);
         }
 
@@ -79,7 +79,7 @@ namespace Penman.Blazor.Quill
             string quillHtmlContent)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.loadQuillHTMLContent",
+                "window.QuillFunctions.loadQuillHTMLContent",
                 quillElement, quillHtmlContent);
         }
 
@@ -89,7 +89,7 @@ namespace Penman.Blazor.Quill
             bool mode)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.enableQuillEditor", 
+                "window.QuillFunctions.enableQuillEditor", 
                 quillElement, mode);
         }
 
@@ -99,7 +99,7 @@ namespace Penman.Blazor.Quill
             string imageUrl)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.insertQuillImage",
+                "window.QuillFunctions.insertQuillImage",
                 quillElement, imageUrl);
         }
 
@@ -108,7 +108,7 @@ namespace Penman.Blazor.Quill
             IJSRuntime jsRuntime, ElementReference toolbarElement)
         {
             return jsRuntime.InvokeAsync<object>(
-                "QuillFunctions.configureStickyToolbar",
+                "window.QuillFunctions.configureStickyToolbar",
                 toolbarElement);
         }
 
