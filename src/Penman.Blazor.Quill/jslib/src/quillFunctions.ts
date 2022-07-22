@@ -231,12 +231,12 @@ export namespace QuillFunctions
     {
 
         let modulesToLoad = {
-          // toolbar: toolBar,
+            toolbar: toolBar,
             blotFormatter: {}
         };
 
         let modulesToLoadWithImageUploader = {
-            //toolbar: toolBar,
+            toolbar: toolBar,
             blotFormatter: {},
             imageUploader: {}
         };
