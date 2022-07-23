@@ -26,8 +26,23 @@
         LoadingImage.blotName = "imageBlot";
         LoadingImage.className = "image-uploading";
         LoadingImage.tagName = "span";
+        
+        
+        class QuillBlazorBridge {
+            constructor(quillElement, blazorHook) {
+                this.quill = quillElement;
+                this.blazorHook = blazorHook;
+            }  
+           
+            fireImageUploadCallbackToBlazorMethod(fileName, fileType) {
+                return window.quillBlazorBridge.blazorHook.invokeMethodAsync('SaveImage',
+                    fileName,
+                    fileType);
+            }
 
 
+        }
+        
         class ImageUploader {
             constructor(quill, options) {
                 this.quill = quill;
@@ -198,7 +213,7 @@
             }
         }
         window.ImageUploader = ImageUploader;
-
+        
         window.QuillFunctions = {
             createQuill: function (
                 quillElement,
@@ -238,7 +253,7 @@
                                                         return base64ImageSrc;
                                                     };
                                                     if(window.quillBlazorBridge != null) {
-                                                        window.quillBlazorBridge.invokeMethodAsync('SaveImage',
+                                                        window.quillBlazorBridge.fireImageUploadCallbackToBlazorMethod(
                                                             file.name,
                                                             file.type)
                                                             .then(result => {
@@ -295,15 +310,6 @@
                 }
                 let quill = new Quill(quillElement, options);
                 
-                quill.on('text-change', function(delta, oldDelta, source) {
-                    if(window.quillBlazorBridge != null) {
-                        try {
-                            window.quillBlazorBridge.invokeMethodAsync('FireTextChangedEvent');
-                        } catch (e) {
-                            //throw nothing.
-                        }
-                    }
-                });
             },
             getQuillContent: function(quillElement) {
                 return JSON.stringify(quillElement.__quill.getContents());
@@ -359,8 +365,26 @@
                     }
                 }
             },
-            setQuillBlazorBridge: function (quillBlazorBridge) {
-                window.quillBlazorBridge = quillBlazorBridge;
+            
+            setQuillBlazorBridge: function (quillElement, blazorHook) {    
+                window.quillBlazorBridge = new QuillBlazorBridge(quillElement, blazorHook);
+                quillElement.__quill.on('text-change', window.QuillFunctions.quillTextChangedHandler);
+            },
+
+            unBindToQuillTextChangeEvent: function (quillElement) {
+                if (quillElement != null && quillElement.__quill != null) {
+                    quillElement.__quill.off('text-change', window.QuillFunctions.quillTextChangedHandler);
+                }
+            }, 
+
+             quillTextChangedHandler: function (delta, oldDelta, source) {
+                if (window.quillBlazorBridge != null) {
+                    try {
+                        window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                    } catch (e) {
+                        //throw nothing.
+                    }
+                }
             }
         };
     })();
