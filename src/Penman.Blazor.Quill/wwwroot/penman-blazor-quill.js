@@ -237,12 +237,14 @@
                                                     window.quillImageDataStream = function() {
                                                         return base64ImageSrc;
                                                     };
-                                                    window.quillBlazorBridge.invokeMethodAsync('SaveImage',
-                                                        file.name,
-                                                        file.type)
-                                                        .then(result => {
-                                                            resolve(result);
-                                                        });
+                                                    if(window.quillBlazorBridge != null) {
+                                                        window.quillBlazorBridge.invokeMethodAsync('SaveImage',
+                                                            file.name,
+                                                            file.type)
+                                                            .then(result => {
+                                                                resolve(result);
+                                                            });
+                                                    }
                                                     break;
                                                 default:
                                                     window.fetch(imageServerUploadUrl,
@@ -294,9 +296,12 @@
                 let quill = new Quill(quillElement, options);
                 
                 quill.on('text-change', function(delta, oldDelta, source) {
-                    //alert("typey-typey");
                     if(window.quillBlazorBridge != null) {
-                        window.quillBlazorBridge.invokeMethodAsync('FireTextChangedEvent');
+                        try {
+                            window.quillBlazorBridge.invokeMethodAsync('FireTextChangedEvent');
+                        } catch (e) {
+                            //throw nothing.
+                        }
                     }
                 });
             },

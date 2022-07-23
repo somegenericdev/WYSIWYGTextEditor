@@ -63,8 +63,7 @@
     public Func<string, string, Stream, Task<string>> ImageServerUploadMethod { get; set; }
 
     [Parameter]
-    public string DebugLevel { get; set; }
-        = "info";
+    public string DebugLevel { get; set; }= "error";
 
     [Parameter]
     public EventCallback OnTextChanged { get; set; }
@@ -238,8 +237,12 @@
 
     private string _editorContainerId = "ql-editor-container";
 
-    public void Dispose()
+    public async void Dispose()
     {
+        if (JsRuntime != null)
+        {
+            await JsRuntime.InvokeAsync<string>("window.QuillFunctions.setQuillBlazorBridge", null);
+        }
         _objRef?.Dispose();
     }
 }
