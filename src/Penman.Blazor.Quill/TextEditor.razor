@@ -57,7 +57,13 @@
     public ImageServerUploadType ImageServerUploadType { get; set; } = ImageServerUploadType.ApiPost;
 
     [Parameter]
-    public string ImageServerUploadUrl { get; set; }
+    public string ImageServerUploadUrl { get; set; } = null;
+
+    [Parameter]
+    public string EditorTextSaveUrl { get; set; } = null;
+
+    [Parameter]
+    public string EditorStatusElementId { get; set; } = null;
 
     [Parameter]
     public Func<string, string, Stream, Task<string>> ImageServerUploadMethod { get; set; }
@@ -65,8 +71,12 @@
     [Parameter]
     public string DebugLevel { get; set; }= "error";
 
+
     [Parameter]
     public EventCallback OnTextChanged { get; set; }
+
+    [Parameter]
+    public EventCallback OnTextSaved { get; set; }
 
 
     #nullable enable
@@ -123,19 +133,24 @@
         }
 
         await ScrollEventHandler();
-        await BundleAndSendDotNetHelper();
+        await BundleAndSetQuillBlazorBridge();
        
         await base.OnAfterRenderAsync(firstRender);
     }
 
-    
 
-    public async Task BundleAndSendDotNetHelper()
+    public async Task BundleAndSetQuillBlazorBridge()
     {
         _objRef = DotNetObjectReference.Create(this);
         if (JsRuntime != null)
         {
-            await JsRuntime.InvokeAsync<string>("window.QuillFunctions.setQuillBlazorBridge", _quillElement, _objRef);
+            //Wire up our bridge between quill and blazor in the javascript
+            await Interop.SetQuillBlazorBridge(
+                JsRuntime,
+                _quillElement,
+                _objRef,
+                EditorTextSaveUrl,
+                EditorStatusElementId);
         }
     }
 
@@ -143,6 +158,12 @@
     public async Task FireTextChangedEvent()
     {
         await OnTextChanged.InvokeAsync();
+    }
+
+    [JSInvokable]
+    public async Task FireTextSavedEvent()
+    {
+        await OnTextSaved.InvokeAsync();
     }
 
     [JSInvokable]

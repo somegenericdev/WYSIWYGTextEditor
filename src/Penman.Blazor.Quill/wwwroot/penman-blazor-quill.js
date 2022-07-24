@@ -27,22 +27,7 @@
         LoadingImage.className = "image-uploading";
         LoadingImage.tagName = "span";
         
-        
-        class QuillBlazorBridge {
-            constructor(quillElement, blazorHook) {
-                this.quill = quillElement;
-                this.blazorHook = blazorHook;
-            }  
-           
-            fireImageUploadCallbackToBlazorMethod(fileName, fileType) {
-                return window.quillBlazorBridge.blazorHook.invokeMethodAsync('SaveImage',
-                    fileName,
-                    fileType);
-            }
-
-
-        }
-        
+          
         class ImageUploader {
             constructor(quill, options) {
                 this.quill = quill;
@@ -213,6 +198,40 @@
             }
         }
         window.ImageUploader = ImageUploader;
+
+
+        class QuillBlazorBridge {
+            constructor(quillElement, blazorHook, postFileTextUrl, statusDisplayElement) {
+                this.quillElement = quillElement;
+                this.blazorHook = blazorHook;
+                this.postFileTextUrl = postFileTextUrl;
+                this.fileContentSaveInProgress = false;
+                this.statusDisplayElement = statusDisplayElement;
+            }
+
+            fireImageUploadCallbackToBlazorMethod(fileName, fileType) {
+                return window.quillBlazorBridge.blazorHook.invokeMethodAsync('SaveImage',
+                    fileName,
+                    fileType);
+            }
+
+            getQuillHTML(quillElement) {
+                return this.quillElement.__quill.root.innerHTML;
+            }
+
+            setStatus(statusMessage) {
+                var elementId = window.quillBlazorBridge.statusDisplayElement;
+                if (elementId != null) { 
+                    var elementFound = document.getElementById(elementId);
+                    if (elementFound != null) {
+                        elementFound.innerText = statusMessage;
+                    }
+                   
+                }
+            }
+        }
+
+
         
         window.QuillFunctions = {
             createQuill: function (
@@ -366,8 +385,8 @@
                 }
             },
             
-            setQuillBlazorBridge: function (quillElement, blazorHook) {    
-                window.quillBlazorBridge = new QuillBlazorBridge(quillElement, blazorHook);
+            setQuillBlazorBridge: function (quillElement, blazorHook, postFileTextUrl, statusDisplayElement) {    
+                window.quillBlazorBridge = new QuillBlazorBridge(quillElement, blazorHook, postFileTextUrl, statusDisplayElement);
                 quillElement.__quill.on('text-change', window.QuillFunctions.quillTextChangedHandler);
             },
 
@@ -378,9 +397,36 @@
             }, 
 
              quillTextChangedHandler: function (delta, oldDelta, source) {
-                if (window.quillBlazorBridge != null) {
-                    try {
+
+                 if (window.quillBlazorBridge != null) {
+                     try {
                         window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                        window.quillBlazorBridge.setStatus("saving...");
+                        if (window.quillBlazorBridge.postFileTextUrl != null
+                            && !window.quillBlazorBridge.fileContentSaveInProgress
+                        ) {
+                            const pageContents = window.quillBlazorBridge.getQuillHTML();
+                            window.quillBlazorBridge.fileContentSaveInProgress = true;
+                            window.fetch(window.quillBlazorBridge.postFileTextUrl,
+                                {
+                                    method: 'POST',
+                                    headers: {
+                                    },
+                                    body: pageContents
+                                })
+                                .then(response => {
+                                    if (response.status === 200) {
+                                        setTimeout(function () {
+                                            window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                                            window.quillBlazorBridge.setStatus("saved");
+                                            window.quillBlazorBridge.fileContentSaveInProgress = false;
+                                        }, 2000);
+
+                                       
+                                    }
+                                });
+                        }
+
                     } catch (e) {
                         //throw nothing.
                     }

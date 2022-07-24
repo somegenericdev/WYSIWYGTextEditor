@@ -112,5 +112,22 @@ namespace Penman.Blazor.Quill
                 toolbarElement);
         }
 
+
+        internal static ValueTask<object> SetQuillBlazorBridge(
+            IJSRuntime jsRuntime, 
+            ElementReference quillElement,
+            DotNetObjectReference<TextEditor> objRef,
+            string editorTextSaveUrl,
+            string editorStatusElementId
+
+        )
+        {
+            return jsRuntime.InvokeAsync<object>("window.QuillFunctions.setQuillBlazorBridge",
+                quillElement,
+                objRef,
+                editorTextSaveUrl,
+                editorStatusElementId);
+        }
+
     }
 }
