@@ -166,13 +166,6 @@
         await OnTextSaved.InvokeAsync();
     }
 
-
-    [JSInvokable]
-    public string GetTextPostUrl()
-    {
-        return TextSavePostUrl;
-    }
-
     [JSInvokable]
     public async Task<string> SaveImage(string imageName, string fileType)
     {

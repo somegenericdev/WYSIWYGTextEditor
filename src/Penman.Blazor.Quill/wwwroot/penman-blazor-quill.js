@@ -200,6 +200,10 @@
         window.ImageUploader = ImageUploader;
 
 
+        /** QuillBlazorBridge acts as a communications protocol between javascript and blazor c# logic in reln to Quill JS.
+         *  It's particularly concerned with passing data about how the quill element's saving of text or image content
+         *  is handled.
+         **/
         class QuillBlazorBridge {
             constructor(quillElement, blazorHook, postFileTextUrl, statusDisplayElement) {
                 this.quillElement = quillElement;
@@ -209,23 +213,34 @@
                 this.statusDisplayElement = statusDisplayElement;
             }
 
+            /**
+             * Call back on Blazor with the details of the image to save.
+             * @param {any} fileName
+             * @param {any} fileType
+             */
             fireImageUploadCallbackToBlazorMethod(fileName, fileType) {
-                return window.quillBlazorBridge.blazorHook.invokeMethodAsync('SaveImage',
+                return this.blazorHook.invokeMethodAsync('SaveImage',
                     fileName,
                     fileType);
             }
 
-            getTextPostUrl() {
-
-                var postUrlPromise = window.quillBlazorBridge.blazorHook.invokeMethodAsync('GetTextPostUrl');
-            }
-
+            /**
+             * Given quillElement, gets the html stored inside of it.
+             * @param {any} quillElement The element containing quill
+             */
             getQuillHTML(quillElement) {
                 return this.quillElement.__quill.root.innerHTML;
             }
 
+            /**
+             * Using an element id reference passed in constructor, we attempt to set status messages
+             * as various actions take place on the Quill JS instance running on the page.  This ensures
+             * we aren't making calls in Blazor server code but instead just using Javascript to set the text 
+             * on the status element as changes occur.
+             * @param {any} statusMessage The status message to display
+             */
             setStatus(statusMessage) {
-                var elementId = window.quillBlazorBridge.statusDisplayElement;
+                var elementId = this.statusDisplayElement;
                 if (elementId != null) { 
                     var elementFound = document.getElementById(elementId);
                     if (elementFound != null) {
@@ -237,12 +252,12 @@
 
             saveQuillContentsToApi() {
                 try {
-                    window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                    window.quillBlazorBridge.setStatus("saving...");
-                    const pageContents = window.quillBlazorBridge.getQuillHTML();
-                    window.quillBlazorBridge.fileContentSaveInProgress = true;
+                    this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                    this.setStatus("saving...");
+                    const pageContents = this.getQuillHTML();
+                    this.fileContentSaveInProgress = true;
 
-                    const postUrl = window.quillBlazorBridge.postFileTextUrl;
+                    const postUrl = this.postFileTextUrl;
 
                     window.fetch(postUrl,
                         {
@@ -254,11 +269,14 @@
                         .then(response => {
                             if (response.status === 200) {
                                 setTimeout(function () {
-                                    window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                                    window.quillBlazorBridge.setStatus("saved");
-                                    window.quillBlazorBridge.fileContentSaveInProgress = false;
+                                    this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                                    this.setStatus("saved");
+                                    this.fileContentSaveInProgress = false;
                                 }, 2000);
 
+
+                            } else {
+                                this.setStatus("Failed to save content.");
 
                             }
                         });
@@ -266,7 +284,6 @@
                 } catch (e) {
                     //throw nothing.
                 }
-
             }
         }
 
