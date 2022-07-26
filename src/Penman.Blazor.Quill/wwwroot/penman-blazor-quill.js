@@ -215,6 +215,11 @@
                     fileType);
             }
 
+            getTextPostUrl() {
+
+                var postUrlPromise = window.quillBlazorBridge.blazorHook.invokeMethodAsync('GetTextPostUrl');
+            }
+
             getQuillHTML(quillElement) {
                 return this.quillElement.__quill.root.innerHTML;
             }
@@ -229,10 +234,42 @@
                    
                 }
             }
+
+            saveQuillContentsToApi() {
+                try {
+                    window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                    window.quillBlazorBridge.setStatus("saving...");
+                    const pageContents = window.quillBlazorBridge.getQuillHTML();
+                    window.quillBlazorBridge.fileContentSaveInProgress = true;
+
+                    const postUrl = window.quillBlazorBridge.postFileTextUrl;
+
+                    window.fetch(postUrl,
+                        {
+                            method: 'POST',
+                            headers: {
+                            },
+                            body: pageContents
+                        })
+                        .then(response => {
+                            if (response.status === 200) {
+                                setTimeout(function () {
+                                    window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                                    window.quillBlazorBridge.setStatus("saved");
+                                    window.quillBlazorBridge.fileContentSaveInProgress = false;
+                                }, 2000);
+
+
+                            }
+                        });
+
+                } catch (e) {
+                    //throw nothing.
+                }
+
+            }
         }
 
-
-        
         window.QuillFunctions = {
             createQuill: function (
                 quillElement,
@@ -344,7 +381,8 @@
                 return quillElement.__quill.setContents(content, 'api');
             },
             loadQuillHTMLContent: function (quillElement, quillHTMLContent) {
-                return quillElement.__quill.root.innerHTML = quillHTMLContent;
+                const delta = quillElement.__quill.clipboard.convert(quillHTMLContent)
+                quillElement.__quill.setContents(delta, 'silent')
             },
             enableQuillEditor: function (quillElement, mode) {
                 quillElement.__quill.enable(mode);
@@ -396,41 +434,22 @@
                 }
             }, 
 
-             quillTextChangedHandler: function (delta, oldDelta, source) {
-
-                 if (window.quillBlazorBridge != null) {
-                     try {
-                        window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                        window.quillBlazorBridge.setStatus("saving...");
-                        if (window.quillBlazorBridge.postFileTextUrl != null
-                            && !window.quillBlazorBridge.fileContentSaveInProgress
-                        ) {
-                            const pageContents = window.quillBlazorBridge.getQuillHTML();
-                            window.quillBlazorBridge.fileContentSaveInProgress = true;
-                            window.fetch(window.quillBlazorBridge.postFileTextUrl,
-                                {
-                                    method: 'POST',
-                                    headers: {
-                                    },
-                                    body: pageContents
-                                })
-                                .then(response => {
-                                    if (response.status === 200) {
-                                        setTimeout(function () {
-                                            window.quillBlazorBridge.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                                            window.quillBlazorBridge.setStatus("saved");
-                                            window.quillBlazorBridge.fileContentSaveInProgress = false;
-                                        }, 2000);
-
-                                       
-                                    }
-                                });
-                        }
-
-                    } catch (e) {
-                        //throw nothing.
-                    }
+            setTextSavePostUrl: function (textSavePostUrl) {
+                if (window.quillBlazorBridge != null) {
+                    window.quillBlazorBridge.postFileTextUrl = textSavePostUrl;
                 }
+            },
+
+             quillTextChangedHandler: function (delta, oldDelta, source) {
+                 if (source == 'user') {
+                     if (window.quillBlazorBridge != null) {
+                         if (window.quillBlazorBridge.postFileTextUrl != null
+                             && !window.quillBlazorBridge.fileContentSaveInProgress
+                         ) {
+                             window.quillBlazorBridge.saveQuillContentsToApi();
+                         }
+                     }
+                 }
             }
         };
     })();

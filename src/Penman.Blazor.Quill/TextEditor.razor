@@ -60,7 +60,7 @@
     public string ImageServerUploadUrl { get; set; } = null;
 
     [Parameter]
-    public string EditorTextSaveUrl { get; set; } = null;
+    public string TextSavePostUrl { get; set; } = null;
 
     [Parameter]
     public string EditorStatusElementId { get; set; } = null;
@@ -149,7 +149,7 @@
                 JsRuntime,
                 _quillElement,
                 _objRef,
-                EditorTextSaveUrl,
+                TextSavePostUrl,
                 EditorStatusElementId);
         }
     }
@@ -166,6 +166,13 @@
         await OnTextSaved.InvokeAsync();
     }
 
+
+    [JSInvokable]
+    public string GetTextPostUrl()
+    {
+        return TextSavePostUrl;
+    }
+
     [JSInvokable]
     public async Task<string> SaveImage(string imageName, string fileType)
     {
@@ -176,6 +183,13 @@
 
         return ImageServerUploadMethod == null ? "" 
             : await ImageServerUploadMethod(imageName, fileType, dataReferenceStream);
+    }
+
+
+    public async Task SetTextPostUrlAsync(string textSavePostUrl)
+    {
+        TextSavePostUrl = textSavePostUrl;
+        await JsRuntime.InvokeAsync<string>("window.QuillFunctions.setTextSavePostUrl", textSavePostUrl);
     }
 
     private async Task ScrollEventHandler()
