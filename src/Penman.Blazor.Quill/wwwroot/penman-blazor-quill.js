@@ -209,9 +209,14 @@
                 this.quillElement = quillElement;
                 this.blazorHook = blazorHook;
                 this.postFileTextUrl = postFileTextUrl;
-                this.fileContentSaveInProgress = false;
                 this.statusDisplayElement = statusDisplayElement;
             }
+
+
+            //timer guff
+            static typingTimer;                //timer identifier for when user stops typing
+            static doneTypingInterval = 1000;  //time in ms to delay after quill activity to save
+            static delayBetweenStatusMessages = 2000; ///time in ms to delay between status messages
 
             /**
              * Call back on Blazor with the details of the image to save.
@@ -244,47 +249,37 @@
                 if (elementId != null) { 
                     var elementFound = document.getElementById(elementId);
                     if (elementFound != null) {
-                        elementFound.innerText = statusMessage;
+                        //TODO: Make the status message showing more fluid
+                        setTimeout(() => { elementFound.innerText = statusMessage; }, QuillBlazorBridge.delayBetweenStatusMessages);
                     }
                    
                 }
             }
 
             saveQuillContentsToApi() {
-                try {
-                    this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                    this.setStatus("saving...");
-                    const pageContents = this.getQuillHTML();
-                    this.fileContentSaveInProgress = true;
+                this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                this.setStatus("saving...");
+                const pageContents = this.getQuillHTML();
 
-                    const postUrl = this.postFileTextUrl;
+                const postUrl = this.postFileTextUrl;
 
-                    window.fetch(postUrl,
-                        {
-                            method: 'POST',
-                            headers: {
-                            },
-                            body: pageContents
-                        })
-                        .then(response => {
-                            if (response.status === 200) {
-                                setTimeout(function () {
-                                    this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
-                                    this.setStatus("saved");
-                                    this.fileContentSaveInProgress = false;
-                                }, 2000);
+                window.fetch(postUrl,
+                    {
+                        method: 'POST',
+                        headers: {
+                        },
+                        body: pageContents
+                    })
+                    .then(response => {
+                        if (response.status === 200) {
+                            this.blazorHook.invokeMethodAsync('FireTextChangedEvent');
+                            this.setStatus("saved");
+                        } else {
+                            this.setStatus("Failed to save content.");
 
-
-                            } else {
-                                this.setStatus("Failed to save content.");
-
-                            }
-                        });
-
-                } catch (e) {
-                    //throw nothing.
+                        }
+                    });
                 }
-            }
         }
 
         window.QuillFunctions = {
@@ -384,26 +379,41 @@
                 let quill = new Quill(quillElement, options);
                 
             },
-            getQuillContent: function(quillElement) {
+
+            getQuillContent: function (quillElement) {
                 return JSON.stringify(quillElement.__quill.getContents());
             },
-            getQuillText: function(quillElement) {
+
+            getQuillText: function (quillElement) {
                 return quillElement.__quill.getText();
             },
-            getQuillHTML: function(quillElement) {
+
+            getQuillHTML: function (quillElement) {
                 return quillElement.__quill.root.innerHTML;
             },
-            loadQuillContent: function(quillElement, quillContent) {
+
+            loadQuillContent: function (quillElement, quillContent) {
                 content = JSON.parse(quillContent);
                 return quillElement.__quill.setContents(content, 'api');
+
+                //if (window.quillBlazorBridge != null) {
+                //    window.quillBlazorBridge.setStatus('Loaded');
+                //}
             },
+
             loadQuillHTMLContent: function (quillElement, quillHTMLContent) {
                 const delta = quillElement.__quill.clipboard.convert(quillHTMLContent)
-                quillElement.__quill.setContents(delta, 'silent')
+                quillElement.__quill.setContents(delta, 'silent');
+
+                //if (window.quillBlazorBridge != null) {
+                //    window.quillBlazorBridge.setStatus('Loaded');
+                //}
             },
+
             enableQuillEditor: function (quillElement, mode) {
                 quillElement.__quill.enable(mode);
             },
+
             insertQuillImage: function (quillElement, imageURL) {
                 var Delta = Quill.import('delta');
                 editorIndex = 0;
@@ -418,6 +428,7 @@
                         .insert({ image: imageURL },
                             { alt: imageURL }));
             },
+
             configureStickyToolbar: function (toolbarElement) {
 
                 window.onscroll = function(e) {
@@ -442,6 +453,7 @@
             
             setQuillBlazorBridge: function (quillElement, blazorHook, postFileTextUrl, statusDisplayElement) {    
                 window.quillBlazorBridge = new QuillBlazorBridge(quillElement, blazorHook, postFileTextUrl, statusDisplayElement);
+               
                 quillElement.__quill.on('text-change', window.QuillFunctions.quillTextChangedHandler);
             },
 
@@ -457,15 +469,14 @@
                 }
             },
 
-             quillTextChangedHandler: function (delta, oldDelta, source) {
+            quillTextChangedHandler: function (delta, oldDelta, source) {
                  if (source == 'user') {
-                     if (window.quillBlazorBridge != null) {
-                         if (window.quillBlazorBridge.postFileTextUrl != null
-                             && !window.quillBlazorBridge.fileContentSaveInProgress
-                         ) {
-                             window.quillBlazorBridge.saveQuillContentsToApi();
-                         }
-                     }
+                     clearTimeout(QuillBlazorBridge.typingTimer);
+                     QuillBlazorBridge.typingTimer = setTimeout(saveContentsToApi, QuillBlazorBridge.doneTypingInterval);
+                 }
+
+                 function saveContentsToApi() {
+                     window.quillBlazorBridge.saveQuillContentsToApi();
                  }
             }
         };
