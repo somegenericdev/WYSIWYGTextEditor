@@ -1,7 +1,7 @@
 ﻿@inject IJSRuntime JSRuntime
 @namespace WYSIWYGTextEditor
 @using WYSIWYGTextEditor.Internal
-<div @ref="@ToolBar">
+<div class="@ToolbarContainerClass" style="@ToolbarContainerStyle" @ref="@ToolBar">
     @if (Toolbar != null)
     {
         <CascadingValue Value="Toolbar">
@@ -14,7 +14,7 @@
 
     @ToolbarContent
 </div>
-<div id="@EditorContainerId" @ref="@QuillElement">
+<div class="@EditorContainerClass" style="@EditorContainerStyle" id="@EditorContainerId" @ref="@QuillElement">
     @EditorContent
 </div>
 
@@ -27,7 +27,26 @@
     public string EditorContainerId { get; set; }
     [Parameter]
     public RenderFragment EditorContent { get; set; }
-
+    /// <summary>
+    /// Supports normal css classes
+    /// </summary>
+    [Parameter]
+    public string EditorContainerClass { get; set; } = string.Empty;
+    /// <summary>
+    /// Supports normal css style
+    /// </summary>
+    [Parameter]
+    public string EditorContainerStyle { get; set; } = string.Empty;
+    /// <summary>
+    /// Supports normal css classes
+    /// </summary>
+    [Parameter]
+    public string ToolbarContainerClass { get; set; } = string.Empty;
+    /// <summary>
+    /// Supports normal css style
+    /// </summary>
+    [Parameter]
+    public string ToolbarContainerStyle { get; set; } = string.Empty;
     [Parameter]
     public RenderFragment ToolbarContent { get; set; }
 
